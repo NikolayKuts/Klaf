@@ -1,6 +1,6 @@
 package com.example.klaf;
 
-import android.util.Log;
+import com.example.klaf.pojo.Desk;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,37 +17,70 @@ public class DateWorker {
     private static final double DECREASE_FACTOR = 0.1;
 
 
-//    public String getCurrentTime() {
-//        Calendar calendar = Calendar.getInstance();
-//        Date date = calendar.getTime();
-//        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy|hh:mm", Locale.getDefault());
-//        return dateFormat.format(date);
-//    }
+    public String getFormattedCurrentTime() {
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy|HH:mm", Locale.getDefault());
+        return dateFormat.format(date);
+    }
 
-    public long getCurrentTime() {
+    public String getFormattedDate(long date) {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy|HH:mm", Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
+    public long getCurrentDate() {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         return date.getTime();
     }
 
-    public long getScheduledTimeNextRepetition(long lastRepetitionDate, long lastScheduledDate, int repetitionDay,
-                                               int lastRepetitionDuration, int currentRepetitionDuration, boolean succeededLastRepetition) {
+    public long getScheduledDateNextRepetition(Desk desk, int currentRepetitionDuration) {
         long newInterval;
-        long lastInterval = lastScheduledDate - lastRepetitionDate;
+        long lastInterval = desk.getScheduledDate() - desk.getLastRepetitionDate();
 
-        if (currentRepetitionDuration + lastRepetitionDuration * DERATION_FACTOR <= lastRepetitionDuration) {
-            newInterval = lastInterval + (lastInterval * (long) getDayFactorByNumberDay(repetitionDay));
+        if (currentRepetitionDuration <= desk.getLastRepeatDuration() + desk.getLastRepeatDuration() * DERATION_FACTOR) {
+            newInterval = lastInterval + (lastInterval * getDayFactorByNumberDay(desk.getRepetitionDay()));
         } else {
-            if (succeededLastRepetition) {
+            if (desk.isSucceededLastRepetition()) {
                 newInterval = lastInterval;
             } else {
                 newInterval = lastInterval - (lastInterval * (long) DECREASE_FACTOR);
             }
         }
-        return getCurrentTime() + newInterval;
+        return getCurrentDate() + newInterval;
     }
 
-    private double getDayFactorByNumberDay(int numberDay) {
+    public boolean getUpdatedSucceededLastRepetition(Desk desk, int currentRepetitionDuration) {
+        int lastRepetitionDuration = desk.getLastRepeatDuration();
+        return currentRepetitionDuration + lastRepetitionDuration * DERATION_FACTOR <= lastRepetitionDuration;
+    }
+
+    public int getUpdatedRepetitionDay(Desk desk) {
+        int date = desk.getRepetitionDay();
+        long difference = getCurrentDate() - desk.getCreationDate();
+        int differenceInDays = (int) difference / 86_400_000;
+        return date < differenceInDays ? ++date : date;
+    }
+
+//    public long getScheduledTimeNextRepetition(long lastRepetitionDate, long lastScheduledDate, int repetitionDay,
+//                                               int lastRepetitionDuration, int currentRepetitionDuration, boolean succeededLastRepetition) {
+//        long newInterval;
+//        long lastInterval = lastScheduledDate - lastRepetitionDate;
+//
+//        if (currentRepetitionDuration + lastRepetitionDuration * DERATION_FACTOR <= lastRepetitionDuration) {
+//            newInterval = lastInterval + (lastInterval * (long) getDayFactorByNumberDay(repetitionDay));
+//        } else {
+//            if (succeededLastRepetition) {
+//                newInterval = lastInterval;
+//            } else {
+//                newInterval = lastInterval - (lastInterval * (long) DECREASE_FACTOR);
+//            }
+//        }
+//        return getCurrentDate() + newInterval;
+//    }
+
+    private long getDayFactorByNumberDay(int numberDay) {
         double result = 0.0;
         switch (numberDay) {
             case 1:
@@ -62,6 +95,6 @@ public class DateWorker {
             case 4:
                 result = FORTH_DAY_FACTOR;
         }
-        return result;
+        return (long) result;
     }
 }

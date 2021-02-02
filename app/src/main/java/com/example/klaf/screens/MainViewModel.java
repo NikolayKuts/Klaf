@@ -72,4 +72,20 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public Desk getDeskById(int id) {
+        Desk result = null;
+        try {
+            result = new GetDeskByIdTask().execute(id).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    private static class GetDeskByIdTask extends AsyncTask<Integer, Void, Desk> {
+        @Override
+        protected Desk doInBackground(Integer... integers) {
+            return database.deskDao().getDeskById(integers[0]);
+        }
+    }
+
 }

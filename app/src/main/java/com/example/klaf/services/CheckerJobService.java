@@ -20,7 +20,7 @@ public class CheckerJobService extends JobService {
                 // if() check desks and show notification if it's needed
                 DateWorker dateWorker = new DateWorker();
                 NotificationAssembler notification = new NotificationAssembler(getApplicationContext());
-                notification.setNotification(Long.toString(dateWorker.getCurrentTime()), "title");
+                notification.setNotification(Long.toString(dateWorker.getCurrentDate()), "title");
                 notification.showNotification();
 
                 if (!canceled) {

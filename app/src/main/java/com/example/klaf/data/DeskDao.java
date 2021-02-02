@@ -18,4 +18,7 @@ public interface DeskDao {
     @Query("SELECT * FROM desk")
     LiveData<List<Desk>> getAllDesks();
 
+    @Query("SELECT * FROM desk WHERE id = :idDesk")
+    Desk getDeskById(int idDesk);
+
 }

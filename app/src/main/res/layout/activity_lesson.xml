@@ -12,7 +12,7 @@
         android:id="@+id/textViewWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="the desk is empty"
         android:textSize="26sp"
         android:textColor="#E8D743"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,4 +92,14 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/textViewWord"
         app:layout_constraintTop_toBottomOf="@+id/textViewWord" />
+
+    <TextView
+        android:id="@+id/textViewTimeCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:0"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

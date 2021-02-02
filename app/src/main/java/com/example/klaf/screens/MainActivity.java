@@ -24,13 +24,8 @@ import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
 import com.example.klaf.services.CheckerJobService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
@@ -46,7 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewDesks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        deleteDatabase("klaf.db");
+
+
+
+
+
+
+
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         desks = new ArrayList<>();
@@ -73,11 +74,14 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
+//        deleteDatabase("klaf.db");
+//        Desk desk2 = new Desk("test", new DateWorker().getCurrentDate());
+//        viewModel.insertDesk(desk2);
+
 //        LiveData<List<Desk>> liveData = viewModel.getDesks();
 //        List<Desk> arrayList = liveData.getValue();
 //        desks.addAll(viewModel.getDesks().getValue());
 
-//        Desk desk2 = new Desk("name2", "start date2", "end date2", 0.0);
 //        Desk desk3 = new Desk("name3", "start date3", "end date3", 0.0);
 //
 //        Desk desk4 = new Desk("name3", "start date3", "end date3", 0.0);
@@ -92,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
 //            Log.i("log", "isn't empty");
 //            viewModel.insertCard(new Card(1, "слово_" + i, "word_" + i, "[fafda]_" + i));
 //        }
-//        viewModel.insertDesk(desk2);
 //        viewModel.insertDesk(desk3);
 //
 //        viewModel.insertDesk(desk4);
@@ -129,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 String deskName = editText.getText().toString();
 
                 DateWorker dateWorker = new DateWorker();
-                long currentTime = dateWorker.getCurrentTime();
-                Desk newDesk = new Desk(deskName, currentTime, 0, 1);
+                long currentTime = dateWorker.getCurrentDate();
+                Desk newDesk = new Desk(deskName, currentTime);
                 viewModel.insertDesk(newDesk);
                 if (!deskName.isEmpty()) {
                     dialog.dismiss();
