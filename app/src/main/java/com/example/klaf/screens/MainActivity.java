@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new DeskAdapter(desks);
+        adapter = new DeskAdapter(desks, viewModel);
         adapter.setOnDeskClickListener(new DeskAdapter.OnDeskClickListener() {
             @Override
             public void onDeskClick(int position) {
@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(jobInfo);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     public void onAddNewDesk(View view) {

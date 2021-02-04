@@ -1,9 +1,6 @@
 package com.example.klaf.screens;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,15 +11,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.klaf.DateWorker;
+import com.example.klaf.FloatingActionButtonAnimator;
 import com.example.klaf.IpaProcesser;
 import com.example.klaf.MyTimer;
 import com.example.klaf.R;
 import com.example.klaf.adapters.SoundsIpaAdapter;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -47,6 +49,14 @@ public class LessonActivity extends AppCompatActivity {
     private RecyclerView recyclerViewIpa;
 
     private MyTimer timer;
+
+
+    private boolean clicked = false;
+
+    private FloatingActionButton main;
+    private FloatingActionButton button1;
+    private FloatingActionButton button2;
+    private FloatingActionButton button3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +86,13 @@ public class LessonActivity extends AppCompatActivity {
 
         setTextViewContent();
 
+        main = findViewById(R.id.floatingActionButtonMain);
+        button1 = findViewById(R.id.floatingActionButtonAddCard);
+        button2 = findViewById(R.id.floatingActionButtonEditCard);
+        button3 = findViewById(R.id.floatingActionButton3);
+
+//        FloatingActionButtonAnimator buttonAnimator = new FloatingActionButtonAnimator(button1, button2, button3);
+//        main.setOnClickListener(buttonAnimator);
 
     }
 
@@ -109,6 +126,10 @@ public class LessonActivity extends AppCompatActivity {
     public void onClickTurn(View view) {
         front = !front;
         setTextViewContent();
+
+        Intent intent = new Intent(this, AddCardActivity.class);
+        intent.putExtra("id_desk", deskId);
+        startActivity(intent);
     }
 
 
@@ -186,21 +207,41 @@ public class LessonActivity extends AppCompatActivity {
 
                 TextView textViewCurrentDuration = dialog.findViewById(R.id.textViewValueCurrentDuration);
                 TextView textViewLastDuration = dialog.findViewById(R.id.textViewValueLastDuration);
-                TextView textViewScheduledDate = dialog.findViewById(R.id.textViewValueScheduldDate);
+                TextView textViewNewScheduledDate = dialog.findViewById(R.id.textViewValueScheduldDate);
+                TextView textViewLastScheduledDate = dialog.findViewById(R.id.textViewValueLastScheduledDate);
 
                 long currentDate = dateWorker.getCurrentDate();
                 int currentRepetitionDuration = timer.getSavedTotalSeconds();
                 long newScheduledDate = dateWorker.getScheduledDateNextRepetition(lessonDesk, currentRepetitionDuration);
                 int updatedRepetitionDay = dateWorker.getUpdatedRepetitionDay(lessonDesk); // method getUpdated
                 boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
-                Desk updatedDesk = new Desk(deskId, lessonDesk.getName(), lessonDesk.getCreationDate(), currentDate, newScheduledDate, currentRepetitionDuration, updatedRepetitionDay, updatedSucceededLastRepetition);
+                Desk updatedDesk = new Desk(
+                        deskId,
+                        lessonDesk.getName(),
+                        lessonDesk.getCreationDate(),
+                        currentDate,
+                        newScheduledDate,
+                        currentRepetitionDuration,
+                        updatedRepetitionDay,
+                        updatedSucceededLastRepetition);
+
                 viewModel.insertDesk(updatedDesk);
 
                 textViewLastDuration.setText(Integer.toString(lessonDesk.getLastRepeatDuration()));
                 textViewCurrentDuration.setText(textViewTimeCounter.getText());
-                textViewScheduledDate.setText(dateWorker.getFormattedDate(newScheduledDate));
+                textViewNewScheduledDate.setText(dateWorker.getFormattedDate(newScheduledDate));
+                textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
                 dialog.show();
             }
         }
+    }
+
+    public void onButtonAddClick(View view) {
+        Intent intent = new Intent(this, AddCardActivity.class);
+        intent.putExtra("id_desk", deskId);
+        startActivity(intent);
+    }
+
+    public void onButtonEditClick(View view) {
     }
 }

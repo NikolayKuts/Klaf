@@ -73,19 +73,6 @@
         app:layout_constraintEnd_toStartOf="@+id/buttonGood"
         app:layout_constraintTop_toTopOf="@+id/buttonGood" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginBottom="52dp"
-        android:clickable="true"
-        android:onClick="onClickToAddCardActivity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:backgroundTint="#89A568"
-        android:src="@drawable/ic_baseline_fingerprint_24"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerviewIpa"
         android:layout_width="wrap_content"
@@ -102,4 +89,67 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#8CA173"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_baseline_fingerprint_24"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonAddCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:onClick="onButtonAddClick"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonMain"
+        app:layout_constraintTop_toBottomOf="@+id/floatingActionButtonMain"
+        app:maxImageSize="68dp"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="#BCB08C" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonEditCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:onClick="onButtonEditClick"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#C6B2B0"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonAddCard"
+        app:layout_constraintTop_toBottomOf="@+id/floatingActionButton3"
+        app:maxImageSize="30dp"
+        app:srcCompat="@drawable/ic_edit"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#D8B074"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonMain"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButtonMain"
+        app:srcCompat="@drawable/ic_notification_desk"
+        app:tint="@color/white" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

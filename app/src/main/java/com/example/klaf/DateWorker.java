@@ -10,10 +10,11 @@ import java.util.Locale;
 
 public class DateWorker {
     private static final double DERATION_FACTOR = 0.1;
-    private static final double FIRST_DAY_FACTOR = 0.25;
+    private static final double FIRST_DAY_FACTOR = 0.30;
     private static final double SECOND_DAY_FACTOR = 0.40;
     private static final double THIRD_DAY_FACTOR = 0.55;
     private static final double FORTH_DAY_FACTOR = 0.75;
+    private static final double WHOLE_DAY_FACTOR = 1.0;
     private static final double DECREASE_FACTOR = 0.1;
 
 
@@ -94,6 +95,8 @@ public class DateWorker {
                 break;
             case 4:
                 result = FORTH_DAY_FACTOR;
+            default:
+                result = WHOLE_DAY_FACTOR;
         }
         return (long) result;
     }

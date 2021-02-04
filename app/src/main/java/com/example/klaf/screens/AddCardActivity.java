@@ -94,12 +94,20 @@ public class AddCardActivity extends AppCompatActivity {
         Card newCard = getCard();
         if (newCard != null) {
             viewModel.insertCard(newCard);
-            Toast.makeText(this, "new card was added", Toast.LENGTH_SHORT).show();
-            finish();
+            Toast.makeText(this, "new card was added", Toast.LENGTH_LONG).show();
+            clearViews();
+//            finish();
         } else {
 
             Toast.makeText(this, "native and foreign words must be filled", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void clearViews() {
+        editTextNativeWord.setText("");
+        editTextForeignWord.setText("");
+        editTextIpa.setText("");
+
     }
 
     private Card getCard() {

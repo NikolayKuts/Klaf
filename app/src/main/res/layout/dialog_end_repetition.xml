@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="200sp"
+    android:layout_width="300sp"
     android:layout_height="300dp">
 
     <TextView
@@ -52,7 +52,7 @@
         android:id="@+id/textViewTitleScheduledDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scheduled date:"
+        android:text="New scheduled date:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleCurrentDuration" />
 
@@ -63,4 +63,20 @@
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewValueCurrentDuration" />
+
+    <TextView
+        android:id="@+id/textViewTitleLastScheduledDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last schedeled date:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleScheduledDate" />
+
+    <TextView
+        android:id="@+id/textViewValueLastScheduledDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewValueScheduldDate" />
 </androidx.constraintlayout.widget.ConstraintLayout>
