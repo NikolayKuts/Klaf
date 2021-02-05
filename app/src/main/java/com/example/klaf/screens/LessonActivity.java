@@ -29,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class LessonActivity extends AppCompatActivity {
     private static final int EASE_LEVEL_EASY = 0;
@@ -91,8 +92,8 @@ public class LessonActivity extends AppCompatActivity {
         button2 = findViewById(R.id.floatingActionButtonEditCard);
         button3 = findViewById(R.id.floatingActionButton3);
 
-//        FloatingActionButtonAnimator buttonAnimator = new FloatingActionButtonAnimator(button1, button2, button3);
-//        main.setOnClickListener(buttonAnimator);
+        FloatingActionButtonAnimator buttonAnimator = new FloatingActionButtonAnimator(button1, button2, button3);
+        main.setOnClickListener(buttonAnimator);
 
     }
 
@@ -126,10 +127,6 @@ public class LessonActivity extends AppCompatActivity {
     public void onClickTurn(View view) {
         front = !front;
         setTextViewContent();
-
-        Intent intent = new Intent(this, AddCardActivity.class);
-        intent.putExtra("id_desk", deskId);
-        startActivity(intent);
     }
 
 
@@ -227,7 +224,7 @@ public class LessonActivity extends AppCompatActivity {
 
                 viewModel.insertDesk(updatedDesk);
 
-                textViewLastDuration.setText(Integer.toString(lessonDesk.getLastRepeatDuration()));
+                textViewLastDuration.setText(String.format(Locale.getDefault(), "%d", lessonDesk.getLastRepeatDuration()));
                 textViewCurrentDuration.setText(textViewTimeCounter.getText());
                 textViewNewScheduledDate.setText(dateWorker.getFormattedDate(newScheduledDate));
                 textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
@@ -237,11 +234,13 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     public void onButtonAddClick(View view) {
-        Intent intent = new Intent(this, AddCardActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AddCardActivity.class);
         intent.putExtra("id_desk", deskId);
         startActivity(intent);
     }
 
     public void onButtonEditClick(View view) {
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_rotate_anim);
+        view.startAnimation(animation);
     }
 }

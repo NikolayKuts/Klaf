@@ -43,12 +43,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-
-
-
-
-
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         desks = new ArrayList<>();
         Log.i("log", "before_observe");
@@ -102,14 +96,14 @@ public class MainActivity extends AppCompatActivity {
 //        viewModel.insertDesk(desk5);
 //        viewModel.insertDesk(desk6);
 //        viewModel.insertDesk(desk7);
-
-        ComponentName componentName = new ComponentName(getApplicationContext(), CheckerJobService.class);
-        JobInfo.Builder infoBuilder = new JobInfo.Builder(1234567, componentName);
-        infoBuilder.setMinimumLatency(10000)
-                .setOverrideDeadline(10000);
-        JobInfo jobInfo = infoBuilder.build();
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        jobScheduler.schedule(jobInfo);
+//////////////////////////////////////
+//        ComponentName componentName = new ComponentName(getApplicationContext(), CheckerJobService.class);
+//        JobInfo.Builder infoBuilder = new JobInfo.Builder(1234567, componentName);
+//        infoBuilder.setMinimumLatency(10000)
+//                .setOverrideDeadline(10000);
+//        JobInfo jobInfo = infoBuilder.build();
+//        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+//        jobScheduler.schedule(jobInfo);
 
     }
 
