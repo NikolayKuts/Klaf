@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.klaf.DateWorker;
 import com.example.klaf.FloatingActionButtonAnimator;
@@ -35,6 +36,7 @@ public class LessonActivity extends AppCompatActivity {
     private static final int EASE_LEVEL_EASY = 0;
     private static final int EASE_LEVEL_GOOD = 1;
     private static final int EASE_LEVEL_BAD = 2;
+    public static final String TAG_CARD_ID = "card_id";
 
     private Card startElement;
 
@@ -48,6 +50,8 @@ public class LessonActivity extends AppCompatActivity {
     private TextView textViewWord;
     private TextView textViewTimeCounter;
     private RecyclerView recyclerViewIpa;
+    private TextView textViewDeskName;
+
 
     private MyTimer timer;
 
@@ -66,7 +70,9 @@ public class LessonActivity extends AppCompatActivity {
 
         textViewWord = findViewById(R.id.textViewWord);
         textViewTimeCounter = findViewById(R.id.textViewTimeCounter);
+        textViewDeskName = findViewById(R.id.textViewLessonDeskName);
         recyclerViewIpa = findViewById(R.id.recyclerviewIpa);
+
 
         timer = new MyTimer(textViewTimeCounter);
 
@@ -102,6 +108,7 @@ public class LessonActivity extends AppCompatActivity {
         super.onResume();
         lessonDesk = viewModel.getDeskById(deskId);
         cards.addAll(viewModel.getCardsByDeskId(deskId));
+        textViewDeskName.setText(lessonDesk.getName());
         setTextViewContent();
 
 
@@ -240,7 +247,12 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     public void onButtonEditClick(View view) {
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_rotate_anim);
-        view.startAnimation(animation);
+        if (cards.isEmpty()) {
+            Toast.makeText(this, "The desk is empty", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), EditCardActivity.class);
+            intent.putExtra(TAG_CARD_ID, cards.get(0).getId());
+            startActivity(intent);
+        }
     }
 }

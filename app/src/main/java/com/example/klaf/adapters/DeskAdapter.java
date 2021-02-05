@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.solver.state.State;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.klaf.DateWorker;
@@ -22,6 +23,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
     private List<Desk> desks;
     private MainViewModel viewModel;
     private OnDeskClickListener onDeskClickListener;
+    private OnDeskLongClickListener onDeskLongClickListener;
 
     public DeskAdapter(List<Desk> desks, MainViewModel viewModel) {
         this.desks = desks;
@@ -30,11 +32,18 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
 
     public interface OnDeskClickListener {
         void onDeskClick(int position);
+    }
 
+    public interface OnDeskLongClickListener {
+        void onDeckLongClick(int position);
     }
 
     public void setOnDeskClickListener(OnDeskClickListener onDeskClickListener) {
         this.onDeskClickListener = onDeskClickListener;
+    }
+
+    public void setOnDeskLongClickListener(OnDeskLongClickListener onDeskLongClickListener) {
+        this.onDeskLongClickListener = onDeskLongClickListener;
     }
 
     @NonNull
@@ -52,6 +61,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
         holder.textViewDeskName.setText(desk.getName());
         holder.textViewScheduledDate.setText(scheduledDate);
         holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
+        holder.setBackgroundColor(position);
     }
 
     @Override
@@ -60,10 +70,10 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        private ConstraintLayout constraintLayout;
-        private TextView textViewDeskName;
-        private TextView textViewScheduledDate;
-        private TextView textViewCardsQuantity;
+        private final ConstraintLayout constraintLayout;
+        private final TextView textViewDeskName;
+        private final TextView textViewScheduledDate;
+        private final TextView textViewCardsQuantity;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +89,23 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
                     }
                 }
             });
+            constraintLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(onDeskLongClickListener != null) {
+                        onDeskLongClickListener.onDeckLongClick(getAdapterPosition());
+                    }
+                    return true;
+                }
+            });
+        }
+
+        private void setBackgroundColor(int position) {
+            if (position % 2 == 0) {
+                constraintLayout.setBackgroundColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_desk_background_dark));
+            } else {
+                constraintLayout.setBackgroundColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.transparent));
+            }
         }
     }
 }

@@ -8,11 +8,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Klaf">
-        <activity android:name=".screens.AddCardActivity"
+        <activity android:name=".screens.EditCardActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".screens.AddCardActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".screens.LessonActivity"
+        <activity
+            android:name=".screens.LessonActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".screens.MainActivity"
+        <activity
+            android:name=".screens.MainActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +26,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.CheckerJobService"
+        <service
+            android:name=".services.CheckerJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 

@@ -56,8 +56,8 @@ public class IpaProcesser {
                         sbIpaTemplate = new StringBuilder(sbIpaTemplate.substring(1));
 //                        ipaCouple = sbIpaTemplate.substring(1, sbIpaTemplate.indexOf("\n", 1));
                     } // else {
-                        ipaCouple = sbIpaTemplate.substring(0, sbIpaTemplate.indexOf("\n"));
-                  //  }
+                    ipaCouple = sbIpaTemplate.substring(0, sbIpaTemplate.indexOf("\n"));
+                    //  }
                 } else {
                     if (sbIpaTemplate.toString().startsWith("\n")) {
                         sbIpaTemplate = new StringBuilder(sbIpaTemplate.substring(1));
@@ -132,5 +132,59 @@ public class IpaProcesser {
             }
         }
         return result;
+    }
+
+    public List<CheckedLetterHolder> getCheckedLetterHolder(String codedIpaFromDB) {
+        List<CheckedLetterHolder> result = new ArrayList<>();
+        StringBuilder builderForeignWord = new StringBuilder(codedIpaFromDB);
+        //  /th=ø//ough=o/t
+        while (builderForeignWord.length() > 0) {
+
+            if (builderForeignWord.substring(0, 1).equals("/")) {
+                builderForeignWord.delete(0, 1);
+                int indexEquals = builderForeignWord.indexOf("=");
+                String letters = builderForeignWord.substring(0, indexEquals);
+                for (int q = 0; q < letters.length(); q++) {
+                    result.add(new CheckedLetterHolder(letters.substring(q, q + 1), true));
+                }
+                if (builderForeignWord.toString().contains("/")) {
+                    builderForeignWord.delete(0, builderForeignWord.indexOf("/") + 1);
+                } else {
+                    builderForeignWord.delete(0, builderForeignWord.length());
+                }
+            } else {
+                result.add(new CheckedLetterHolder(builderForeignWord.substring(0, 1), false));
+                builderForeignWord.delete(0, 1);
+            }
+        }
+        return result;
+    }
+
+    public String getCompletedCouples(String codedIpa) {
+        StringBuilder result = new StringBuilder();
+        StringBuilder ipa = new StringBuilder(codedIpa);
+
+        while (ipa.length() > 0) {
+            if (ipa.substring(0, 1).equals("/")) {
+                ipa.delete(0, 1);
+                String couple;
+                if (ipa.toString().contains("/")) {
+                    int index = ipa.indexOf("/");
+                    couple = ipa.substring(0, index) + "\n";
+                    ipa.delete(0, index + 1);
+                } else {
+                    couple = ipa.substring(0, ipa.length());
+                    ipa.delete(0, ipa.length());
+                }
+                result.append(couple);
+            } else {
+                ipa.delete(0, 1);
+            }
+        }
+        if (result.toString().endsWith("\n")) {
+            int resultLength = result.length();
+            result.delete(resultLength - 1, resultLength);
+        }
+        return result.toString();
     }
 }

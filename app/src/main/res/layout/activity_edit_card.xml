@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
-    tools:context=".screens.AddCardActivity">
+    tools:context=".screens.EditCardActivity">
 
     <EditText
-        android:id="@+id/editTextNativeWor"
+        android:id="@+id/editTextEditNativeWor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewEditLettersBar" />
 
     <EditText
-        android:id="@+id/editTexForeignWord"
+        android:id="@+id/editTextEditForeignWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -35,12 +35,12 @@
         android:textColor="#EDB158"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNativeWor"
-        app:layout_constraintStart_toStartOf="@+id/editTextNativeWor"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNativeWor" />
+        app:layout_constraintEnd_toEndOf="@+id/editTextEditNativeWor"
+        app:layout_constraintStart_toStartOf="@+id/editTextEditNativeWor"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEditNativeWor" />
 
     <EditText
-        android:id="@+id/editTextIpa"
+        android:id="@+id/editTextEditIpa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -50,9 +50,9 @@
         android:textColor="#71B5B4"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintEnd_toEndOf="@+id/editTexForeignWord"
-        app:layout_constraintStart_toStartOf="@+id/editTexForeignWord"
-        app:layout_constraintTop_toBottomOf="@+id/editTexForeignWord" />
+        app:layout_constraintEnd_toEndOf="@+id/editTextEditForeignWord"
+        app:layout_constraintStart_toStartOf="@+id/editTextEditForeignWord"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEditForeignWord" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -65,8 +65,7 @@
         android:id="@+id/buttonApplyChanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClickAddCard"
-        android:text="Add"
+        android:text="Apply changes"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
@@ -75,7 +74,7 @@
         app:layout_constraintVertical_bias="0.169" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewLettersBar"
+        android:id="@+id/recyclerViewEditLettersBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"

@@ -85,6 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00:0"
+        android:textSize="24sp"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,5 +152,26 @@
         app:layout_constraintTop_toTopOf="@+id/floatingActionButtonMain"
         app:srcCompat="@drawable/ic_notification_desk"
         app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/textViewTitleDesk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desk:"
+        android:paddingEnd="10dp"
+        android:textSize="24sp"
+        android:textColor="#9F9F9F"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewLessonDeskName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="24sp"
+        android:textColor="#E19F3E"
+        app:layout_constraintStart_toEndOf="@+id/textViewTitleDesk"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,6 +45,33 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public Desk getDeskById(int id) {
+        Desk result = null;
+        try {
+            result = new GetDeskByIdTask().execute(id).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    private static class GetDeskByIdTask extends AsyncTask<Integer, Void, Desk> {
+        @Override
+        protected Desk doInBackground(Integer... integers) {
+            return database.deskDao().getDeskById(integers[0]);
+        }
+    }
+
+    public void removeDesk(Desk desk) {
+        new RemoveDeskTask().execute(desk);
+    }
+    private static class RemoveDeskTask extends AsyncTask<Desk, Void, Void> {
+        @Override
+        protected Void doInBackground(Desk... desks) {
+            database.deskDao().deleteDesk(desks[0]);
+            return null;
+        }
+    }
+
     public void insertCard(Card card) {
         new InsertCardTask().execute(card);
     }
@@ -72,19 +99,19 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    public Desk getDeskById(int id) {
-        Desk result = null;
+    public Card getCardById(int id) {
+        Card result = null;
         try {
-            result = new GetDeskByIdTask().execute(id).get();
+            result = new GetCardByIdTask().execute(id).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
-    private static class GetDeskByIdTask extends AsyncTask<Integer, Void, Desk> {
+    private static class GetCardByIdTask extends AsyncTask<Integer, Void, Card>  {
         @Override
-        protected Desk doInBackground(Integer... integers) {
-            return database.deskDao().getDeskById(integers[0]);
+        protected Card doInBackground(Integer... integers) {
+            return database.cardDao().getCardById(integers[0]);
         }
     }
 

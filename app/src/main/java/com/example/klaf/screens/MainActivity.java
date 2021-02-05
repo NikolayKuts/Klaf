@@ -7,22 +7,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.klaf.DateWorker;
 import com.example.klaf.R;
 import com.example.klaf.adapters.DeskAdapter;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
-import com.example.klaf.services.CheckerJobService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +64,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        adapter.setOnDeskLongClickListener(new DeskAdapter.OnDeskLongClickListener() {
+            @Override
+            public void onDeckLongClick(int position) {
+                showRemoveDeskDialog(position);
+            }
+        });
 
         recyclerView.setAdapter(adapter);
+
+
 
 //        deleteDatabase("klaf.db");
 //        Desk desk2 = new Desk("test", new DateWorker().getCurrentDate());
@@ -114,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddNewDesk(View view) {
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_anim);
+        view.startAnimation(animation);
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_add_desk);
         EditText editText = dialog.findViewById(R.id.editTextDeskName);
@@ -140,6 +149,31 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showRemoveDeskDialog(int position) {
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_remove_desk);
+
+        TextView textViewDeskName = dialog.findViewById(R.id.textViewNameTebleForRemoving);
+        Button buttonDelete = dialog.findViewById(R.id.buttonDeleteDeskRemoving);
+        Button buttonCancel = dialog.findViewById(R.id.buttonCancelDeskRemoving);
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.removeDesk(desks.get(position));
+                dialog.dismiss();
+            }
+        });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        textViewDeskName.setText(desks.get(position).getName());
+        dialog.show();
     }
 
 }

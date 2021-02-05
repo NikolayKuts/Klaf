@@ -22,4 +22,7 @@ public interface CardDao {
 
     @Query("SELECT * FROM card WHERE idDesk = :idDeskTable")
     List<Card> getCardsByDesk(int idDeskTable);
+
+    @Query("SELECT * FROM card WHERE id = :cardId")
+    Card getCardById(int cardId);
 }

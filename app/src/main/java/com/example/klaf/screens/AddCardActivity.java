@@ -39,8 +39,8 @@ public class AddCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
 
-        editTextNativeWord = findViewById(R.id.editTextNativeWord);
-        editTextForeignWord = findViewById(R.id.editTextForeignWord);
+        editTextNativeWord = findViewById(R.id.editTextNativeWor);
+        editTextForeignWord = findViewById(R.id.editTexForeignWord);
         editTextIpa = findViewById(R.id.editTextIpa);
         recyclerViewLettersBar = findViewById(R.id.recyclerViewLettersBar);
 

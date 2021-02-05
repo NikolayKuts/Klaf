@@ -2,6 +2,7 @@ package com.example.klaf.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,5 +21,8 @@ public interface DeskDao {
 
     @Query("SELECT * FROM desk WHERE id = :idDesk")
     Desk getDeskById(int idDesk);
+
+    @Delete()
+    void deleteDesk(Desk desk);
 
 }
