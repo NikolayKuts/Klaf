@@ -74,9 +74,10 @@
         app:layout_constraintTop_toTopOf="@+id/buttonGood" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewIpa"
+        android:id="@+id/recyclerViewIpa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/textViewWord"
         app:layout_constraintStart_toStartOf="@+id/textViewWord"
         app:layout_constraintTop_toBottomOf="@+id/textViewWord" />
 
@@ -146,11 +147,13 @@
         android:layout_marginEnd="35dp"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="onButtonDeleteClick"
         android:visibility="invisible"
         app:backgroundTint="#D8B074"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonMain"
         app:layout_constraintTop_toTopOf="@+id/floatingActionButtonMain"
-        app:srcCompat="@drawable/ic_notification_desk"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic__delete_card"
         app:tint="@color/white" />
 
     <TextView

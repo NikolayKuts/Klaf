@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Klaf</string>
+
+    <string-array name="test">
+        <item>fdadfafasdfasdfasddsf</item>
+        <item>fdadfasfasdfasdfadsf</item>
+        <item>fdadfafasddsf</item>
+        <item>fdadffasdfasdadsf</item>
+        <item>fdadffasdfasdfadsf</item>
+    </string-array>
 </resources>

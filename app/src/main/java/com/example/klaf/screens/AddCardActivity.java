@@ -59,34 +59,7 @@ public class AddCardActivity extends AppCompatActivity {
             }
         });
 
-        editTextForeignWord.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkedLetterHolders.clear();
-                String foreignWord = s.toString();
-                if (!foreignWord.isEmpty()) {
-                    String[] array = foreignWord.split("");
-                    LinkedList<String> arrayList = new LinkedList<>(Arrays.asList(array));
-                    arrayList.remove(0);
-                    for (int i = 0; i < arrayList.size(); i++) {
-                        checkedLetterHolders.add(new CheckedLetterHolder(arrayList.get(i), false));
-                    }
-                }
-                lettersBarAdapter.notifyDataSetChanged();
-//                setEditTextIpaContent();
-                IpaProcesser ipaProcesser = new IpaProcesser();
-                editTextIpa.setText(ipaProcesser.getInCompletedCouples(checkedLetterHolders));
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        editTextForeignWord.addTextChangedListener(new TextChangeWatcher(checkedLetterHolders, lettersBarAdapter, editTextIpa));
 
     }
 
@@ -96,7 +69,6 @@ public class AddCardActivity extends AppCompatActivity {
             viewModel.insertCard(newCard);
             Toast.makeText(this, "new card was added", Toast.LENGTH_LONG).show();
             clearViews();
-//            finish();
         } else {
 
             Toast.makeText(this, "native and foreign words must be filled", Toast.LENGTH_SHORT).show();

@@ -69,7 +69,9 @@ public class LettersBarAdapter extends RecyclerView.Adapter<LettersBarAdapter.Ho
                 public void onClick(View v) {
                     CheckedLetterHolder checkedHolder = list.get(getAdapterPosition());
                     checkedHolder.setChecked(!checkedHolder.isChecked());
-                    onClickHelper.onItemClick(getAdapterPosition());
+                    if (onClickHelper != null) {
+                        onClickHelper.onItemClick(getAdapterPosition());
+                    }
                 }
             });
         }

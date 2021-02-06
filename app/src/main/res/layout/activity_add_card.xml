@@ -15,14 +15,14 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="native word"
+        android:inputType="textMultiLine"
+        android:textColor="#A9B34E"
         android:textColorHint="@color/hint"
         android:textSize="22sp"
-        android:textColor="#A9B34E"
-        android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewEditLettersBar" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewLettersBar" />
 
     <EditText
         android:id="@+id/editTexForeignWord"

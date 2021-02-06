@@ -2,6 +2,7 @@ package com.example.klaf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class IpaProcesser {
@@ -185,6 +186,7 @@ public class IpaProcesser {
             int resultLength = result.length();
             result.delete(resultLength - 1, resultLength);
         }
-        return result.toString();
+        return result.toString().replace("=", " = ");
     }
+
 }

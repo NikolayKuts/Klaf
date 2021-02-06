@@ -15,7 +15,7 @@ import com.example.klaf.R;
 import java.util.List;
 
 public class SoundsIpaAdapter extends RecyclerView.Adapter<SoundsIpaAdapter.Holder> {
-    private List<CheckedLetterHolder> list;
+    private final List<CheckedLetterHolder> list;
 
     public SoundsIpaAdapter(List<CheckedLetterHolder> list) {
         this.list = list;
@@ -47,7 +47,7 @@ public class SoundsIpaAdapter extends RecyclerView.Adapter<SoundsIpaAdapter.Hold
     }
 
     static class Holder extends RecyclerView.ViewHolder {
-        private TextView textViewItemResult;
+        private final TextView textViewItemResult;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
