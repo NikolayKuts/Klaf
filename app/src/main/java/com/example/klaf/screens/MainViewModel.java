@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.room.Delete;
 
 import com.example.klaf.data.KlafDatabase;
 import com.example.klaf.pojo.Card;
@@ -112,6 +114,17 @@ public class MainViewModel extends AndroidViewModel {
         @Override
         protected Card doInBackground(Integer... integers) {
             return database.cardDao().getCardById(integers[0]);
+        }
+    }
+
+    public void deleteCard(Card card) {
+        new DeleteCardTask().execute(card);
+    }
+    private static class DeleteCardTask extends AsyncTask<Card, Void, Void> {
+        @Override
+        protected Void doInBackground(Card... cards) {
+            database.cardDao().deleteCard(cards[0]);
+            return null;
         }
     }
 

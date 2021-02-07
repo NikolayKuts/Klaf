@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Turn"
+        android:visibility="invisible"
         android:onClick="onClickTurn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,6 +44,7 @@
         android:layout_height="wrap_content"
         android:onClick="onClickEasy"
         android:text="Easy"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/buttonGood"
@@ -56,6 +58,7 @@
         android:layout_marginEnd="12dp"
         android:onClick="onClickGood"
         android:text="Good"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/buttonEasy"
         app:layout_constraintEnd_toStartOf="@+id/buttonEasy"
         app:layout_constraintStart_toEndOf="@id/buttonBad"
@@ -67,6 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bad"
+        android:visibility="invisible"
         android:onClick="onClickBad"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/buttonGood"
@@ -152,7 +156,7 @@
         app:backgroundTint="#D8B074"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonMain"
         app:layout_constraintTop_toTopOf="@+id/floatingActionButtonMain"
-        app:maxImageSize="40dp"
+        app:maxImageSize="35dp"
         app:srcCompat="@drawable/ic__delete_card"
         app:tint="@color/white" />
 
@@ -176,5 +180,16 @@
         android:textColor="#E19F3E"
         app:layout_constraintStart_toEndOf="@+id/textViewTitleDesk"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonStartLesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:onClick="onClickStartLesson"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonEasy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonEasy" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

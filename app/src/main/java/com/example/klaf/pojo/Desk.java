@@ -89,4 +89,8 @@ public class Desk {
     public boolean isSucceededLastRepetition() {
         return succeededLastRepetition;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

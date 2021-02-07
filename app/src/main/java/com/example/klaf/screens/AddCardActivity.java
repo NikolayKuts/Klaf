@@ -67,7 +67,7 @@ public class AddCardActivity extends AppCompatActivity {
         Card newCard = getCard();
         if (newCard != null) {
             viewModel.insertCard(newCard);
-            Toast.makeText(this, "new card was added", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "new card has been added", Toast.LENGTH_LONG).show();
             clearViews();
         } else {
 
@@ -86,7 +86,7 @@ public class AddCardActivity extends AppCompatActivity {
         IpaProcesser ipaProcesser = new IpaProcesser();
         String nativeWord = this.editTextNativeWord.getText().toString().trim();
         String foreign = editTextForeignWord.getText().toString().trim();
-        String ipa = ipaProcesser.getCodedIpaForDB(checkedLetterHolders, editTextIpa.getText().toString());
+        String ipa = ipaProcesser.getCodedIpaForDB(checkedLetterHolders, editTextIpa.getText().toString().trim());
         if (!nativeWord.isEmpty() || !foreign.isEmpty()) {
             return new Card(deskId, nativeWord, foreign, ipa);
         }

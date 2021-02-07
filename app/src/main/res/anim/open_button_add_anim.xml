@@ -11,7 +11,7 @@
 
     <rotate
         android:interpolator="@android:anim/overshoot_interpolator"
-        android:duration="1000"
+        android:duration="700"
         android:startOffset="100"
         android:pivotX="50%"
         android:pivotY="50%"
@@ -19,7 +19,8 @@
         android:toDegrees="0" />
 
     <translate
-        android:duration="300"
+        android:duration="500"
+        android:interpolator="@android:anim/overshoot_interpolator"
         android:fromYDelta="-100%"
         android:toYDelta="0%" />
 

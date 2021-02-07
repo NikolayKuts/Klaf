@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,6 +92,8 @@ public class LessonActivity extends AppCompatActivity {
         FloatingActionButtonAnimator buttonAnimator = new FloatingActionButtonAnimator(button1, button2, button3);
         main.setOnClickListener(buttonAnimator);
 
+        setVisibilityOnButtons(false);
+
     }
 
     @Override
@@ -104,8 +106,6 @@ public class LessonActivity extends AppCompatActivity {
         textViewDeskName.setText(lessonDesk.getName());
         setTextViewContent();
         setSoundAdapterContent();
-
-        Log.i("log_after_moving", cards.toString());
     }
 
     private void setTextViewContent() {
@@ -116,6 +116,10 @@ public class LessonActivity extends AppCompatActivity {
             } else {
                 textViewWord.setText(card.getNativeWord());
             }
+            textViewWord.setTextColor(getResources().getColor(R.color.word));
+        } else {
+            textViewWord.setText("The desk is empty");
+            textViewWord.setTextColor(getResources().getColor(R.color.hint));
         }
     }
 
@@ -129,6 +133,8 @@ public class LessonActivity extends AppCompatActivity {
                 soundList.clear();
                 soundList.addAll(ipaProcesser.getDecodeSoundsListFromIpa(card.getIpa()));
             }
+        } else {
+            soundList.clear();
         }
         soundsIpaAdapter.notifyDataSetChanged();
     }
@@ -245,7 +251,7 @@ public class LessonActivity extends AppCompatActivity {
 
     public void onButtonEditClick(View view) {
         if (cards.isEmpty()) {
-            Toast.makeText(this, "The desk is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There isn't anything for editing", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(getApplicationContext(), EditCardActivity.class);
             intent.putExtra(TAG_CARD_ID, cards.get(0).getId());
@@ -254,5 +260,70 @@ public class LessonActivity extends AppCompatActivity {
     }
 
     public void onButtonDeleteClick(View view) {
+        if (cards.isEmpty()) {
+            Toast.makeText(this, "There is nothing for deleting", Toast.LENGTH_SHORT).show();
+        } else {
+            Dialog dialog = new Dialog(view.getContext());
+            dialog.setContentView(R.layout.dialog_delete_card);
+
+            TextView textViewCardForDeleting = dialog.findViewById(R.id.textViewCardForDeleting);
+            Button buttonCancel = dialog.findViewById(R.id.buttonCancleCardDeleting);
+            Button buttonDelete = dialog.findViewById((R.id.buttonApplyCardDeleting));
+
+            Card cardForDeleting = cards.get(0);
+            String nativeWord = cardForDeleting.getNativeWord();
+            String foreignWord = cardForDeleting.getForeignWord();
+
+            String cardContent = String.format("%s | %s", nativeWord, foreignWord);
+            textViewCardForDeleting.setText(cardContent);
+
+            dialog.show();
+
+            buttonCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewModel.deleteCard(cardForDeleting);
+                    dialog.dismiss();
+                    onResume();
+                    Toast.makeText(LessonActivity.this, "The card has been deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void setVisibilityOnButtons(boolean visible) {
+        Button buttonEasy = findViewById(R.id.buttonEasy);
+        Button buttonGood = findViewById(R.id.buttonGood);
+        Button buttonBad = findViewById(R.id.buttonBad);
+        Button buttonTurn = findViewById(R.id.buttonTurn);
+        Button buttonStartLesson = findViewById(R.id.buttonStartLesson);
+
+        int visibility;
+        int buttonStartLessonVisibility;
+        if (visible) {
+            visibility = View.VISIBLE;
+            buttonStartLessonVisibility = View.INVISIBLE;
+        } else {
+            visibility = View.INVISIBLE;
+            buttonStartLessonVisibility = View.VISIBLE;
+        }
+
+        buttonEasy.setVisibility(visibility);
+        buttonGood.setVisibility(visibility);
+        buttonBad.setVisibility(visibility);
+        buttonTurn.setVisibility(visibility);
+        buttonStartLesson.setVisibility(buttonStartLessonVisibility);
+    }
+
+    public void onClickStartLesson(View view) {
+        if (!cards.isEmpty()) {
+            setVisibilityOnButtons(true);
+        }
     }
 }

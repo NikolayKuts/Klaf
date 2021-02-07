@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.klaf.DateWorker;
 import com.example.klaf.R;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnDeskLongClickListener(new DeskAdapter.OnDeskLongClickListener() {
             @Override
             public void onDeckLongClick(int position) {
-                showRemoveDeskDialog(position);
+                showGeneralDialog(position);
             }
         });
 
@@ -138,20 +139,24 @@ public class MainActivity extends AppCompatActivity {
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String deskName = editText.getText().toString();
+                String deskName = editText.getText().toString().trim();
 
-                DateWorker dateWorker = new DateWorker();
-                long currentTime = dateWorker.getCurrentDate();
-                Desk newDesk = new Desk(deskName, currentTime);
-                viewModel.insertDesk(newDesk);
-                if (!deskName.isEmpty()) {
-                    dialog.dismiss();
+                if (deskName.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    DateWorker dateWorker = new DateWorker();
+                    long currentTime = dateWorker.getCurrentDate();
+                    Desk newDesk = new Desk(deskName, currentTime);
+                    viewModel.insertDesk(newDesk);
+                    if (!deskName.isEmpty()) {
+                        dialog.dismiss();
+                    }
                 }
             }
         });
     }
 
-    private void showRemoveDeskDialog(int position) {
+    private void showDeletingDeskDialog(int position) {
         Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_remove_desk);
 
@@ -174,6 +179,71 @@ public class MainActivity extends AppCompatActivity {
         });
         textViewDeskName.setText(desks.get(position).getName());
         dialog.show();
+    }
+
+    private void showEditingDeskDialog(int position) {
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_edit_desk);
+
+        EditText editTextDeskName = dialog.findViewById(R.id.editTextDeskNameForChanging);
+        Button buttonCancelChanges = dialog.findViewById(R.id.buttonCancleChanges);
+        Button buttonApplyChangedDeskName = dialog.findViewById(R.id.buttonApplyChangedDeskName);
+
+        Desk desk = desks.get(position);
+        editTextDeskName.setText(desk.getName());
+
+        dialog.show();
+
+        buttonCancelChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        buttonApplyChangedDeskName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String deskName = editTextDeskName.getText().toString();
+
+                if (deskName.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    desk.setName(deskName);
+                    viewModel.insertDesk(desk);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+    }
+
+    private void showGeneralDialog(int position) {
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_general_on_desk);
+
+        TextView textViewTitle = dialog.findViewById(R.id.textViewTitleGeneral);
+        Button buttonCallEditingDialog = dialog.findViewById(R.id.buttonCallEditingDeskDialog);
+        Button buttonCallDeletingDialog = dialog.findViewById(R.id.buttonCallDeletingDeskDialog);
+
+        textViewTitle.setText(desks.get(position).getName());
+
+        dialog.show();
+
+        buttonCallDeletingDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeletingDeskDialog(position);
+                dialog.dismiss();
+            }
+        });
+        buttonCallEditingDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditingDeskDialog(position);
+                dialog.dismiss();
+            }
+        });
     }
 
 }

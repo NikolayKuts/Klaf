@@ -34,8 +34,8 @@ public class FloatingActionButtonAnimator implements View.OnClickListener {
         Animation closeButtonAdd = AnimationUtils.loadAnimation(v.getContext(), R.anim.close_button_add_anim);
         Animation openButtonEdit = AnimationUtils.loadAnimation(v.getContext(), R.anim.open_button_edit_anim);
         Animation closeButtonEdit = AnimationUtils.loadAnimation(v.getContext(), R.anim.close_button_edit_anim);
-        Animation open3 = AnimationUtils.loadAnimation(v.getContext(), R.anim.open_b3_anim);
-        Animation close3 = AnimationUtils.loadAnimation(v.getContext(), R.anim.close_b3_anim);
+        Animation open3 = AnimationUtils.loadAnimation(v.getContext(), R.anim.open_button_delete_anim);
+        Animation close3 = AnimationUtils.loadAnimation(v.getContext(), R.anim.close_button_delete_anim);
         v.startAnimation(click);
         if (!clicked) {
             buttonAdd.startAnimation(openButtonAdd);

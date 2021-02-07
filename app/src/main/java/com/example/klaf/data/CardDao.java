@@ -2,6 +2,7 @@ package com.example.klaf.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -25,4 +26,7 @@ public interface CardDao {
 
     @Query("SELECT * FROM card WHERE id = :cardId")
     Card getCardById(int cardId);
+
+    @Delete
+    void deleteCard(Card card);
 }
