@@ -189,4 +189,9 @@ public class IpaProcesser {
         return result.toString().replace("=", " = ");
     }
 
+    public String getCompletedCouplesForCardViewer(String codedIpa) {
+        String result = getCompletedCouples(codedIpa);
+        return result.replace("\n", " | ");
+    }
+
 }

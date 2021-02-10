@@ -8,8 +8,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Klaf">
-        <activity android:name=".screens.EditCardActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".screens.CardViewerActivity"></activity>
+        <activity
+            android:name=".screens.EditCardActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".screens.AddCardActivity"
             android:windowSoftInputMode="adjustPan" />

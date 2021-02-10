@@ -29,4 +29,7 @@ public interface CardDao {
 
     @Delete
     void deleteCard(Card card);
+
+    @Query("DELETE FROM card WHERE idDesk = :deskId")
+    void deleteCardsByDeskId(int deskId);
 }

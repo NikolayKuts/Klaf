@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="wrap_content">
+    android:layout_height="300dp">
 
     <TextView
         android:id="@+id/textViewTitleGeneral"
@@ -28,8 +28,26 @@
         android:id="@+id/buttonCallEditingDeskDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit desk"
+        android:text="Edit desk name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonCallDeletingDeskDialog" />
+
+    <Button
+        android:id="@+id/buttonShowCardsViewer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Show cards"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCallEditingDeskDialog" />
+
+    <Button
+        android:id="@+id/buttonToAddCardActivity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Add cards"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonShowCardsViewer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

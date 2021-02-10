@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG_DESK_ID = "desk_id";
+
     private MainViewModel viewModel;
     private List<Desk> desks;
     private List<Card> cards;
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         desks = new ArrayList<>();
-        Log.i("log", "before_observe");
         viewModel.getDesks().observe(this, new Observer<List<Desk>>() {
             @Override
             public void onChanged(List<Desk> desksFromDB) {
@@ -61,14 +62,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDeskClick(int position) {
                 Intent intent = new Intent(MainActivity.this, LessonActivity.class);
-                intent.putExtra("id_desk", desks.get(position).getId());
+                intent.putExtra(TAG_DESK_ID, desks.get(position).getId());
                 startActivity(intent);
             }
         });
         adapter.setOnDeskLongClickListener(new DeskAdapter.OnDeskLongClickListener() {
             @Override
             public void onDeckLongClick(int position) {
-                showGeneralDialog(position);
+                Desk desk = desks.get(position);
+                showGeneralDialog(desk);
             }
         });
 
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showDeletingDeskDialog(int position) {
+    private void showDeletingDeskDialog(Desk desk) {
         Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_remove_desk);
 
@@ -167,7 +169,8 @@ public class MainActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.removeDesk(desks.get(position));
+                viewModel.deleteCardsByDeskId(desk.getId());
+                viewModel.removeDesk(desk);
                 dialog.dismiss();
             }
         });
@@ -177,11 +180,11 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        textViewDeskName.setText(desks.get(position).getName());
+        textViewDeskName.setText(desk.getName());
         dialog.show();
     }
 
-    private void showEditingDeskDialog(int position) {
+    private void showEditingDeskDialog(Desk desk) {
         Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_edit_desk);
 
@@ -189,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
         Button buttonCancelChanges = dialog.findViewById(R.id.buttonCancleChanges);
         Button buttonApplyChangedDeskName = dialog.findViewById(R.id.buttonApplyChangedDeskName);
 
-        Desk desk = desks.get(position);
         editTextDeskName.setText(desk.getName());
 
         dialog.show();
@@ -218,29 +220,53 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showGeneralDialog(int position) {
+    private void showGeneralDialog(Desk desk) {
         Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_general_on_desk);
 
         TextView textViewTitle = dialog.findViewById(R.id.textViewTitleGeneral);
         Button buttonCallEditingDialog = dialog.findViewById(R.id.buttonCallEditingDeskDialog);
         Button buttonCallDeletingDialog = dialog.findViewById(R.id.buttonCallDeletingDeskDialog);
+        Button buttonShowCardsViewer = dialog.findViewById(R.id.buttonShowCardsViewer);
+        Button buttonToAddCardActivity = dialog.findViewById(R.id.buttonToAddCardActivity);
 
-        textViewTitle.setText(desks.get(position).getName());
+        textViewTitle.setText(desk.getName());
 
         dialog.show();
 
         buttonCallDeletingDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDeletingDeskDialog(position);
+                showDeletingDeskDialog(desk);
                 dialog.dismiss();
             }
         });
         buttonCallEditingDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditingDeskDialog(position);
+                showEditingDeskDialog(desk);
+                dialog.dismiss();
+            }
+        });
+        buttonShowCardsViewer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewModel.getCardsByDeskId(desk.getId()).isEmpty()) {
+                    Toast.makeText(MainActivity.this, "The desk is empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, CardViewerActivity.class);
+                    intent.putExtra(TAG_DESK_ID, desk.getId());
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            }
+        });
+        buttonToAddCardActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
+                intent.putExtra(TAG_DESK_ID, desk.getId());
+                startActivity(intent);
                 dialog.dismiss();
             }
         });

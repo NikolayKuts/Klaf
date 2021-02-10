@@ -128,4 +128,15 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public void deleteCardsByDeskId(int id) {
+        new DeleteCardsByDeskIdTask().execute(id);
+    }
+    private static class DeleteCardsByDeskIdTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            database.cardDao().deleteCardsByDeskId(integers[0]);
+            return null;
+        }
+    }
+
 }

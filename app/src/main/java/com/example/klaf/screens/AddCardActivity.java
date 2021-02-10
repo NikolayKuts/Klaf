@@ -44,7 +44,7 @@ public class AddCardActivity extends AppCompatActivity {
         editTextIpa = findViewById(R.id.editTextIpa);
         recyclerViewLettersBar = findViewById(R.id.recyclerViewLettersBar);
 
-        deskId = getIntent().getIntExtra("id_desk", 0);
+        deskId = getIntent().getIntExtra(MainActivity.TAG_DESK_ID, -1);
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         recyclerViewLettersBar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

@@ -11,6 +11,7 @@ public class FloatingActionButtonAnimator implements View.OnClickListener {
     private final FloatingActionButton buttonEdit;
     private final FloatingActionButton button3;
     private boolean clicked;
+    private OnClickHelper onClickHelper;
 
     public FloatingActionButtonAnimator(FloatingActionButton buttonAdd,
                                         FloatingActionButton buttonEdit,
@@ -21,12 +22,31 @@ public class FloatingActionButtonAnimator implements View.OnClickListener {
         clicked = false;
     }
 
+    public interface OnClickHelper {
+        void onClick();
+    }
+
+    public void setOnClickHelper(OnClickHelper onClickHelper) {
+        this.onClickHelper = onClickHelper;
+    }
+
+    public boolean isClicked() {
+        return clicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
     @Override
     public void onClick(View v) {
+        clicked = !clicked;
         setVisibility();
         setAnimation(v);
         setClickable();
-        clicked = !clicked;
+        if (onClickHelper != null) {
+            onClickHelper.onClick();
+        }
     }
     private void setAnimation(View v) {
         Animation click = AnimationUtils.loadAnimation(v.getContext(), R.anim.click_anim);
@@ -37,7 +57,7 @@ public class FloatingActionButtonAnimator implements View.OnClickListener {
         Animation open3 = AnimationUtils.loadAnimation(v.getContext(), R.anim.open_button_delete_anim);
         Animation close3 = AnimationUtils.loadAnimation(v.getContext(), R.anim.close_button_delete_anim);
         v.startAnimation(click);
-        if (!clicked) {
+        if (clicked) {
             buttonAdd.startAnimation(openButtonAdd);
             buttonEdit.startAnimation(openButtonEdit);
             button3.startAnimation(open3);
@@ -49,7 +69,7 @@ public class FloatingActionButtonAnimator implements View.OnClickListener {
     }
 
     private void setVisibility() {
-        if (!clicked) {
+        if (clicked) {
             buttonAdd.setVisibility(View.VISIBLE);
             buttonEdit.setVisibility(View.VISIBLE);
             button3.setVisibility(View.VISIBLE);
@@ -61,7 +81,7 @@ public class FloatingActionButtonAnimator implements View.OnClickListener {
     }
 
     private void setClickable() {
-        if (!clicked) {
+        if (clicked) {
             buttonAdd.setClickable(true);
             buttonEdit.setClickable(true);
             button3.setClickable(true);

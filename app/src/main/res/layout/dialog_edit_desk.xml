@@ -30,7 +30,7 @@
         android:id="@+id/buttonApplyChangedDeskName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Apply"
+        android:text="Rename"
         app:layout_constraintStart_toStartOf="@+id/editTextDeskNameForChanging"
         app:layout_constraintTop_toBottomOf="@+id/editTextDeskNameForChanging" />
 

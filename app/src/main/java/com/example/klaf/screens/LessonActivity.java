@@ -35,7 +35,6 @@ public class LessonActivity extends AppCompatActivity {
     private static final int EASE_LEVEL_GOOD = 1;
     private static final int EASE_LEVEL_BAD = 2;
     public static final String TAG_CARD_ID = "card_id";
-    public static final String TAG_DESK_ID = "id_desk";
 
     private TextView textViewWord;
     private TextView textViewTimeCounter;
@@ -44,8 +43,11 @@ public class LessonActivity extends AppCompatActivity {
 
 
     private Card startElement;
+    private Card goodElement;
+    private Card badElement;
 
     private List<Card> cards;
+    private List<Card> savedProgressList = new LinkedList<>();
     private MainViewModel viewModel;
     private int deskId;
     private Desk lessonDesk;
@@ -57,6 +59,7 @@ public class LessonActivity extends AppCompatActivity {
 
     private MyTimer timer;
 
+    FloatingActionButtonAnimator buttonAnimator;
     private FloatingActionButton main;
     private FloatingActionButton button1;
     private FloatingActionButton button2;
@@ -80,7 +83,7 @@ public class LessonActivity extends AppCompatActivity {
         timer = new MyTimer(textViewTimeCounter);
         cards = new LinkedList<>();
 
-        deskId = getIntent().getIntExtra(TAG_DESK_ID, 0);
+        deskId = getIntent().getIntExtra(MainActivity.TAG_DESK_ID, 0);
 
         soundsIpaAdapter = new SoundsIpaAdapter(soundList);
 
@@ -89,7 +92,21 @@ public class LessonActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        FloatingActionButtonAnimator buttonAnimator = new FloatingActionButtonAnimator(button1, button2, button3);
+        buttonAnimator = new FloatingActionButtonAnimator(button1, button2, button3);
+        buttonAnimator.setOnClickHelper(new FloatingActionButtonAnimator.OnClickHelper() {
+            @Override
+            public void onClick() {
+                if (buttonAnimator.isClicked()) {
+                    if (timer.isRun()) {
+                        timer.pauseCount();
+                    }
+                } else {
+                    if (timer.isPaused()) {
+                        timer.runCount();
+                    }
+                }
+            }
+        });
         main.setOnClickListener(buttonAnimator);
 
         setVisibilityOnButtons(false);
@@ -103,13 +120,72 @@ public class LessonActivity extends AppCompatActivity {
         lessonDesk = viewModel.getDeskById(deskId);
         cards.clear();
         cards.addAll(viewModel.getCardsByDeskId(deskId));
+        if (cards.isEmpty()) {
+            savedProgressList.clear();
+            startElement = null;
+            goodElement = null;
+            badElement = null;
+            timer.stopCount();
+            setVisibilityOnButtons(false);
+        }
+
+        Log.i("log", "on resume saved :" + savedProgressList);
+        Log.i("log", "on resume cards :" + cards);
+        Log.i("log", "on resume start :" + startElement);
+        Log.i("log", "on resume good :" + goodElement);
+        Log.i("log", "on resume bad :" + badElement);
+
+        if (!savedProgressList.isEmpty()) {
+            fillCardsByProgress();
+        }
         textViewDeskName.setText(lessonDesk.getName());
         setTextViewContent();
         setSoundAdapterContent();
+        onFinishLesson();
+    }
+
+    private void fillCardsByProgress() {
+        List<Card> updatedList = new LinkedList<>();
+        List<Card> addedCards = new LinkedList<>();
+
+        if (savedProgressList.size() < cards.size()) {
+            List<Card> temporary = new LinkedList<>(cards);
+
+            for (Card card : cards) {
+                boolean contains = false;
+                for (Card savedCard : savedProgressList) {
+                    if (card.getId() == savedCard.getId()) {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    addedCards.add(card);
+                    temporary.remove(card);
+                }
+            }
+            cards.clear();
+            cards.addAll(temporary);
+        }
+
+        for (Card savedCard : savedProgressList) {
+            for (Card relevantCard : cards) {
+                if (relevantCard.getId() == savedCard.getId()) {
+                    updatedList.add(relevantCard);
+                    break;
+                }
+            }
+        }
+        updatedList.addAll(addedCards);
+        cards.clear();
+        cards.addAll(updatedList);
     }
 
     private void setTextViewContent() {
-        if (!cards.isEmpty()) {
+        if (cards.isEmpty()) {
+            textViewWord.setText("The desk is empty");
+            textViewWord.setTextColor(getResources().getColor(R.color.hint));
+        } else {
             Card card = cards.get(0);
             if (front) {
                 textViewWord.setText(card.getForeignWord());
@@ -117,9 +193,6 @@ public class LessonActivity extends AppCompatActivity {
                 textViewWord.setText(card.getNativeWord());
             }
             textViewWord.setTextColor(getResources().getColor(R.color.word));
-        } else {
-            textViewWord.setText("The desk is empty");
-            textViewWord.setTextColor(getResources().getColor(R.color.hint));
         }
     }
 
@@ -139,113 +212,91 @@ public class LessonActivity extends AppCompatActivity {
         soundsIpaAdapter.notifyDataSetChanged();
     }
 
+    private void moveCardByEaseLevel(int easeLevel) {
+        Card cardForMoving = cards.get(0);
+        cards.remove(0);
+        if (easeLevel == EASE_LEVEL_EASY) {
+            cards.add(cardForMoving);
+        } else if (easeLevel == EASE_LEVEL_GOOD) {
+            int newPosition = cards.size() * 3 / 4;
+            cards.add(newPosition, cardForMoving);
+        } else {
+            int newPosition = cards.size() / 4;
+            cards.add(newPosition, cardForMoving);
+        }
+
+        saveProgress();
+        Log.i("log", "moving: cards" + cards.toString());
+    }
+
+    private void saveProgress() {
+        savedProgressList.clear();
+        savedProgressList.addAll(cards);
+    }
+
     public void onClickTurn(View view) {
         front = !front;
         setTextViewContent();
         setSoundAdapterContent();
     }
 
-
-    private void moveCardByEaseLevel(int easeLevel) {
-        Card cardForMoving = cards.get(0);
-        if (easeLevel == EASE_LEVEL_EASY) {
-            cards.remove(0);
-            cards.add(cardForMoving);
-        } else if (easeLevel == EASE_LEVEL_GOOD) {
-            cards.remove(0);
-            int newPosition = cards.size() * 3 / 4;
-            cards.add(newPosition, cardForMoving);
-        } else {
-            cards.remove(0);
-            int newPosition = cards.size() / 4;
-            cards.add(newPosition, cardForMoving);
-        }
-
-    }
-
     public void onClickEasy(View view) {
         if (!cards.isEmpty()) {
+            Card card = cards.get(0);
             if (startElement == null) {
-                startElement = cards.get(0);
+                startElement = card;
+            } else if (startElement.getId() == card.getId()) {
+                startElement = new Card(-1, 0, "", "", "");
             }
+
+            if (goodElement != null && goodElement.getId() == card.getId()) {
+                goodElement = null;
+            }
+
+            if (badElement != null && badElement.getId() == card.getId()) {
+                badElement = null;
+            }
+
             moveCardByEaseLevel(EASE_LEVEL_EASY);
-            if (!timer.isAllowed()) {
-                timer.runCount();
-            }
-            showEndDialogOnFinishing();
+            onFinishLesson();
             front = false;
             setTextViewContent();
             setSoundAdapterContent();
-
         }
+        closeFloatingButtonIfOpened();
+        Log.i("TAG", "onClickGood: " + cards.toString());
     }
 
     public void onClickGood(View view) {
         if (!cards.isEmpty()) {
+            goodElement = cards.get(0);
+
             moveCardByEaseLevel(EASE_LEVEL_GOOD);
             front = false;
             setTextViewContent();
             setSoundAdapterContent();
-            if (!timer.isAllowed()) {
-                timer.runCount();
-            }
         }
+        closeFloatingButtonIfOpened();
+        Log.i("TAG", "onClickGood: " + cards.toString());
     }
 
     public void onClickBad(View view) {
         if (!cards.isEmpty()) {
+            badElement = cards.get(0);
+
             moveCardByEaseLevel(EASE_LEVEL_BAD);
             front = false;
             setTextViewContent();
             setSoundAdapterContent();
-            if (!timer.isAllowed()) {
-                timer.runCount();
-            }
         }
+        closeFloatingButtonIfOpened();
+        Log.i("TAG", "onClickGood: " + cards.toString());
     }
 
-    private void showEndDialogOnFinishing() {
-        if (startElement != null) {
-            if (startElement.getId() == (cards.get(0).getId())) {
-                timer.stopCount();
-                DateWorker dateWorker = new DateWorker();
-                Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.dialog_end_repetition);
-
-                TextView textViewCurrentDuration = dialog.findViewById(R.id.textViewValueCurrentDuration);
-                TextView textViewLastDuration = dialog.findViewById(R.id.textViewValueLastDuration);
-                TextView textViewNewScheduledDate = dialog.findViewById(R.id.textViewValueScheduldDate);
-                TextView textViewLastScheduledDate = dialog.findViewById(R.id.textViewValueLastScheduledDate);
-
-                long currentDate = dateWorker.getCurrentDate();
-                int currentRepetitionDuration = timer.getSavedTotalSeconds();
-                long newScheduledDate = dateWorker.getScheduledDateNextRepetition(lessonDesk, currentRepetitionDuration);
-                int updatedRepetitionDay = dateWorker.getUpdatedRepetitionDay(lessonDesk); // method getUpdated
-                boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
-                Desk updatedDesk = new Desk(
-                        deskId,
-                        lessonDesk.getName(),
-                        lessonDesk.getCreationDate(),
-                        currentDate,
-                        newScheduledDate,
-                        currentRepetitionDuration,
-                        updatedRepetitionDay,
-                        updatedSucceededLastRepetition);
-
-                viewModel.insertDesk(updatedDesk);
-
-                textViewLastDuration.setText(String.format(Locale.getDefault(), "%d", lessonDesk.getLastRepeatDuration()));
-                textViewCurrentDuration.setText(textViewTimeCounter.getText());
-                textViewNewScheduledDate.setText(dateWorker.getFormattedDate(newScheduledDate));
-                textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
-                dialog.show();
-            }
-        }
-    }
 
     public void onButtonAddClick(View view) {
         Intent intent = new Intent(getApplicationContext(), AddCardActivity.class);
-        intent.putExtra("id_desk", deskId);
+        intent.putExtra(MainActivity.TAG_DESK_ID, deskId);
         startActivity(intent);
     }
 
@@ -289,12 +340,90 @@ public class LessonActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     viewModel.deleteCard(cardForDeleting);
+                    if (startElement != null && startElement.getId() == cardForDeleting.getId()) {
+                        if (cards.size() > 1) {
+                            startElement = cards.get(1);
+                        }
+                    }
+                    if (goodElement != null && goodElement.getId() == cardForDeleting.getId()) {
+                        goodElement = null;
+                    }
+                    if (badElement != null && badElement.getId() == cardForDeleting.getId()) {
+                        badElement = null;
+                    }
                     dialog.dismiss();
                     onResume();
                     Toast.makeText(LessonActivity.this, "The card has been deleted", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    public void onClickStartLesson(View view) {
+        if (!cards.isEmpty()) {
+            setVisibilityOnButtons(true);
+            if (!timer.isRun()) {
+                timer.runCount();
+            }
+            saveProgress();
+            closeFloatingButtonIfOpened();
+        }
+    }
+
+    private void closeFloatingButtonIfOpened() {
+        if (buttonAnimator.isClicked()) {
+            buttonAnimator.onClick(main);
+        }
+    }
+
+
+    private void onFinishLesson() {
+        if (startElement != null) {
+            if ((startElement.getId() == cards.get(0).getId() || startElement.getId() == -1)
+                    && goodElement == null
+                    && badElement == null) {
+
+                timer.stopCount();
+                showFinishDialog();
+                setVisibilityOnButtons(false);
+
+                startElement = null;
+            }
+        }
+    }
+
+    private void showFinishDialog() {
+        DateWorker dateWorker = new DateWorker();
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_end_repetition);
+
+        TextView textViewCurrentDuration = dialog.findViewById(R.id.textViewValueCurrentDuration);
+        TextView textViewLastDuration = dialog.findViewById(R.id.textViewValueLastDuration);
+        TextView textViewNewScheduledDate = dialog.findViewById(R.id.textViewValueScheduldDate);
+        TextView textViewLastScheduledDate = dialog.findViewById(R.id.textViewValueLastScheduledDate);
+
+        long currentDate = dateWorker.getCurrentDate();
+        int currentRepetitionDuration = timer.getSavedTotalSeconds();
+        long newScheduledDate = dateWorker.getScheduledDateNextRepetition(lessonDesk, currentRepetitionDuration);
+        int updatedRepetitionDay = dateWorker.getUpdatedRepetitionDay(lessonDesk); // method getUpdated
+        boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
+        Desk updatedDesk = new Desk(
+                deskId,
+                lessonDesk.getName(),
+                lessonDesk.getCreationDate(),
+                currentDate,
+                newScheduledDate,
+                currentRepetitionDuration,
+                updatedRepetitionDay,
+                updatedSucceededLastRepetition);
+
+        viewModel.insertDesk(updatedDesk);
+
+        textViewLastDuration.setText(String.format(Locale.getDefault(), "%d", lessonDesk.getLastRepeatDuration()));
+        textViewCurrentDuration.setText(textViewTimeCounter.getText());
+        textViewNewScheduledDate.setText(dateWorker.getFormattedDate(newScheduledDate));
+        textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
+        dialog.show();
     }
 
     private void setVisibilityOnButtons(boolean visible) {
@@ -321,9 +450,4 @@ public class LessonActivity extends AppCompatActivity {
         buttonStartLesson.setVisibility(buttonStartLessonVisibility);
     }
 
-    public void onClickStartLesson(View view) {
-        if (!cards.isEmpty()) {
-            setVisibilityOnButtons(true);
-        }
-    }
 }
