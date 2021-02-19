@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="the desk is empty"
-        android:textSize="26sp"
         android:textColor="#E8D743"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
@@ -23,8 +23,8 @@
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.30"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="257dp" />
 
     <Button
         android:id="@+id/buttonTurn"
@@ -164,20 +164,24 @@
         android:id="@+id/textViewTitleDesk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Desk:"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/arapey_italic"
+        android:paddingTop="3dp"
         android:paddingEnd="10dp"
-        android:textSize="24sp"
+        android:text="desk:"
         android:textColor="#9F9F9F"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewLessonDeskName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textViewLessonDeskName" />
 
     <TextView
         android:id="@+id/textViewLessonDeskName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="24sp"
         android:textColor="#E19F3E"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/textViewTitleDesk"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -191,5 +195,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonEasy" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewArrow"
+        app:layout_constraintHorizontal_bias="0.437"
+        app:layout_constraintStart_toStartOf="@+id/textViewArrow"
+        app:layout_constraintTop_toBottomOf="@+id/textViewArrow"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/textViewWordTypeFront"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="N"
+        android:padding="3dp"
+        android:layout_marginStart="10dp"
+        android:drawablePadding="20dp"
+        android:textColor="@color/word_front"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleDesk" />
+
+    <TextView
+        android:id="@+id/textViewArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="->"
+        android:textColor="@color/hint"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewWordTypeFront"
+        app:layout_constraintStart_toEndOf="@+id/textViewWordTypeFront"
+        app:layout_constraintTop_toTopOf="@+id/textViewWordTypeFront" />
+
+    <TextView
+        android:id="@+id/textViewWordTypeBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="20dp"
+        android:padding="3dp"
+        android:text="F"
+        android:textColor="@color/word_back"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textViewArrow"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleDesk" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

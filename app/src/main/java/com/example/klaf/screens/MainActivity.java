@@ -7,9 +7,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,6 +29,8 @@ import com.example.klaf.R;
 import com.example.klaf.adapters.DeskAdapter;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
+import com.example.klaf.services.CheckerJobService;
+import com.example.klaf.services.RepetitionDayUpdater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +38,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG_DESK_ID = "desk_id";
 
+    private static boolean firstStart = true;
     private MainViewModel viewModel;
     private List<Desk> desks;
+    private List<Integer> cardQuantityInDesk;
     private List<Card> cards;
     private DeskAdapter adapter;
     private RecyclerView recyclerView;
@@ -42,22 +52,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerViewDesks);
+        desks = new ArrayList<>();
+        cardQuantityInDesk = new ArrayList<>();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        desks = new ArrayList<>();
         viewModel.getDesks().observe(this, new Observer<List<Desk>>() {
             @Override
             public void onChanged(List<Desk> desksFromDB) {
                 desks.clear();
                 desks.addAll(desksFromDB);
+                cardQuantityInDesk.clear();
+                cardQuantityInDesk.addAll(viewModel.getCardQuantityList());
                 adapter.notifyDataSetChanged();
-
             }
         });
 
-        adapter = new DeskAdapter(desks, viewModel);
+        adapter = new DeskAdapter(desks, cardQuantityInDesk);
         adapter.setOnDeskClickListener(new DeskAdapter.OnDeskClickListener() {
             @Override
             public void onDeskClick(int position) {
@@ -75,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        firstStart = sharedPreferences.getBoolean("first_start", true);
+
+        runRepetitionDayUpdater(firstStart);
+        if (firstStart) {
+            sharedPreferences.edit().putBoolean("first_start", false).apply();
+        }
+
 
 
 
@@ -106,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 //        viewModel.insertDesk(desk5);
 //        viewModel.insertDesk(desk6);
 //        viewModel.insertDesk(desk7);
-//////////////////////////////////////
+////////////////////////////////////
 //        ComponentName componentName = new ComponentName(getApplicationContext(), CheckerJobService.class);
 //        JobInfo.Builder infoBuilder = new JobInfo.Builder(1234567, componentName);
 //        infoBuilder.setMinimumLatency(10000)
@@ -115,15 +136,31 @@ public class MainActivity extends AppCompatActivity {
 //        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
 //        jobScheduler.schedule(jobInfo);
 
+
+
+    }
+
+    private void runRepetitionDayUpdater(boolean firstStart) {
+        if (firstStart) {
+            ComponentName componentName = new ComponentName(getApplicationContext(), RepetitionDayUpdater.class);
+            JobInfo.Builder infoBuilder = new JobInfo.Builder(1123434324, componentName);
+            infoBuilder.setMinimumLatency(10_000)
+                    .setOverrideDeadline(10_000);
+            JobInfo jobInfo = infoBuilder.build();
+            JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            jobScheduler.schedule(jobInfo);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        cardQuantityInDesk.clear();
+        cardQuantityInDesk.addAll(viewModel.getCardQuantityList());
         adapter.notifyDataSetChanged();
     }
 
-    public void onAddNewDesk(View view) {
+    public void onCreatDesk(View view) {
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_anim);
         view.startAnimation(animation);
         Dialog dialog = new Dialog(this);
@@ -150,9 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     long currentTime = dateWorker.getCurrentDate();
                     Desk newDesk = new Desk(deskName, currentTime);
                     viewModel.insertDesk(newDesk);
-                    if (!deskName.isEmpty()) {
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 }
             }
         });
@@ -207,14 +242,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String deskName = editTextDeskName.getText().toString();
+                Toast toast;
 
                 if (deskName.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT).show();
+                    toast = Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT);
                 } else {
-                    desk.setName(deskName);
-                    viewModel.insertDesk(desk);
-                    dialog.dismiss();
+                    if (desk.getName().equals(deskName)) {
+                        toast = Toast.makeText(MainActivity.this, "You haven't changed the name", Toast.LENGTH_SHORT);
+                    } else {
+                        desk.setName(deskName);
+                        viewModel.insertDesk(desk);
+                        dialog.dismiss();
+                        toast = Toast.makeText(MainActivity.this, "The name has been changed", Toast.LENGTH_SHORT);
+                    }
                 }
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
             }
         });
 

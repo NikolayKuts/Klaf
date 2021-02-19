@@ -21,13 +21,14 @@ import java.util.Locale;
 
 public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
     private List<Desk> desks;
-    private MainViewModel viewModel;
+    private List<Integer> cardQuantityList;
+//    private MainViewModel viewModel;
     private OnDeskClickListener onDeskClickListener;
     private OnDeskLongClickListener onDeskLongClickListener;
 
-    public DeskAdapter(List<Desk> desks, MainViewModel viewModel) {
+    public DeskAdapter(List<Desk> desks, List<Integer> cardQuantityList) {
         this.desks = desks;
-        this.viewModel = viewModel;
+        this.cardQuantityList = cardQuantityList;
     }
 
     public interface OnDeskClickListener {
@@ -56,11 +57,12 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         Desk desk = desks.get(position);
-        int size = viewModel.getCardsByDeskId(desk.getId()).size();
+        int size = cardQuantityList.get(position);
         String scheduledDate = new DateWorker().getFormattedDate(desk.getScheduledDate());
         holder.textViewDeskName.setText(desk.getName());
         holder.textViewScheduledDate.setText(scheduledDate);
         holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
+        holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d_d", desk.getRepetitionDay()));
         holder.setBackgroundColor(position);
     }
 
@@ -74,6 +76,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
         private final TextView textViewDeskName;
         private final TextView textViewScheduledDate;
         private final TextView textViewCardsQuantity;
+        private final TextView textViewRepetitionDay;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +84,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
             textViewDeskName = itemView.findViewById(R.id.textViewDeskName);
             textViewScheduledDate = itemView.findViewById(R.id.textViewDeskScheduledDate);
             textViewCardsQuantity = itemView.findViewById(R.id.textViewDeskQuantityCars);
+            textViewRepetitionDay = itemView.findViewById(R.id.textViewRepetitionDay);
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -92,7 +96,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
             constraintLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    if(onDeskLongClickListener != null) {
+                    if (onDeskLongClickListener != null) {
                         onDeskLongClickListener.onDeckLongClick(getAdapterPosition());
                     }
                     return true;

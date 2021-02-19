@@ -36,10 +36,7 @@ public class MyTimer {
             @Override
             public void run() {
                 if (run) {
-                int minutes = totalSeconds / 60;
-                int seconds = totalSeconds % 60;
-
-                String time = String.format(Locale.getDefault(), "%02d:%d", minutes, seconds);
+                String time = getTimeAsString(totalSeconds);
                 textView.setText(time);
 
                     totalSeconds++;
@@ -49,12 +46,18 @@ public class MyTimer {
         });
     }
 
+    public String getTimeAsString(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+
     public void stopCount() {
         run = false;
         setColorByRun();
         savedTotalSeconds = totalSeconds;
         totalSeconds = 0;
-        textView.setText("00:0");
+        textView.setText("00:00");
     }
 
     public void pauseCount() {

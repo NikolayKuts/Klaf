@@ -42,7 +42,10 @@ public class LettersBarAdapter extends RecyclerView.Adapter<LettersBarAdapter.Ho
         CheckedLetterHolder checkedHolder = list.get(position);
         holder.textView.setText(checkedHolder.getLetter());
         boolean checked = checkedHolder.isChecked();
-        if (checked) {
+        if (checkedHolder.getLetter().equals(" ")) {
+            holder.textView.setTextSize(40.0f);
+            holder.textView.setBackgroundColor(ContextCompat.getColor(holder.textView.getContext(), R.color.item_desk_background_dark));
+        }else if (checked) {
 //                holder.textView.setTextColor(ContextCompat.getColor(holder.textView.getContext(), R.color.black));
             holder.textView.setTextSize(50.0f);
             holder.textView.setBackgroundColor(ContextCompat.getColor(holder.textView.getContext(), R.color.teal_700));

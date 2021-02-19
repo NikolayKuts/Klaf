@@ -13,6 +13,7 @@ import com.example.klaf.data.KlafDatabase;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -56,6 +57,7 @@ public class MainViewModel extends AndroidViewModel {
         }
         return result;
     }
+
     private static class GetDeskByIdTask extends AsyncTask<Integer, Void, Desk> {
         @Override
         protected Desk doInBackground(Integer... integers) {
@@ -66,6 +68,7 @@ public class MainViewModel extends AndroidViewModel {
     public void removeDesk(Desk desk) {
         new RemoveDeskTask().execute(desk);
     }
+
     private static class RemoveDeskTask extends AsyncTask<Desk, Void, Void> {
         @Override
         protected Void doInBackground(Desk... desks) {
@@ -74,9 +77,50 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    private static class GetDeskListTask extends AsyncTask<Void, Void, List<Desk>> {
+        @Override
+        protected List<Desk> doInBackground(Void... voids) {
+            return database.deskDao().getDeckList();
+        }
+    }
+
+    public List<Integer> getCardQuantityList() {
+        List<Integer> result = new ArrayList<>();
+        List<Desk> current;
+        try {
+            current = new GetDeskListTask().execute().get();
+
+            for (Desk desk : current) {
+                int quantity = new GetCardQuantityByDeskId().execute(desk.getId()).get();
+                result.add(quantity);
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int getCardQuantityByDeskId(int deskId) {
+        int result = 0;
+        try {
+            result = new GetCardQuantityByDeskId().execute(deskId).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static class GetCardQuantityByDeskId extends AsyncTask<Integer, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            return database.cardDao().getCardQuantityByDeskId(integers[0]);
+        }
+    }
+
     public void insertCard(Card card) {
         new InsertCardTask().execute(card);
     }
+
     private static class InsertCardTask extends AsyncTask<Card, Void, Void> {
         @Override
         protected Void doInBackground(Card... cards) {
@@ -94,6 +138,7 @@ public class MainViewModel extends AndroidViewModel {
         }
         return result;
     }
+
     private static class GetCardsByDeskIdTask extends AsyncTask<Integer, Void, List<Card>> {
         @Override
         protected List<Card> doInBackground(Integer... integers) {
@@ -110,7 +155,8 @@ public class MainViewModel extends AndroidViewModel {
         }
         return result;
     }
-    private static class GetCardByIdTask extends AsyncTask<Integer, Void, Card>  {
+
+    private static class GetCardByIdTask extends AsyncTask<Integer, Void, Card> {
         @Override
         protected Card doInBackground(Integer... integers) {
             return database.cardDao().getCardById(integers[0]);
@@ -120,6 +166,7 @@ public class MainViewModel extends AndroidViewModel {
     public void deleteCard(Card card) {
         new DeleteCardTask().execute(card);
     }
+
     private static class DeleteCardTask extends AsyncTask<Card, Void, Void> {
         @Override
         protected Void doInBackground(Card... cards) {
@@ -131,6 +178,7 @@ public class MainViewModel extends AndroidViewModel {
     public void deleteCardsByDeskId(int id) {
         new DeleteCardsByDeskIdTask().execute(id);
     }
+
     private static class DeleteCardsByDeskIdTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {

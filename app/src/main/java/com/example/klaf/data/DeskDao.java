@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.klaf.pojo.Desk;
 
@@ -16,8 +17,14 @@ public interface DeskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insetDesk(Desk desk);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertDeskList(List<Desk> desks);
+
     @Query("SELECT * FROM desk")
     LiveData<List<Desk>> getAllDesks();
+
+    @Query("SELECT * FROM desk")
+    List<Desk> getDeckList();
 
     @Query("SELECT * FROM desk WHERE id = :idDesk")
     Desk getDeskById(int idDesk);

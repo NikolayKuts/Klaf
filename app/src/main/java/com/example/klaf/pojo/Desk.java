@@ -20,10 +20,21 @@ public class Desk {
     private long scheduledDate;
     private int lastRepeatDuration;
     private int repetitionDay;
+    private int repetitionQuantity;
     private boolean succeededLastRepetition;
 
 
-    public Desk(int id, String name, long creationDate, long lastRepetitionDate, long scheduledDate, int lastRepeatDuration, int repetitionDay, boolean succeededLastRepetition) {
+    public Desk(
+            int id,
+            String name,
+            long creationDate,
+            long lastRepetitionDate,
+            long scheduledDate,
+            int lastRepeatDuration,
+            int repetitionDay,
+            int repetitionQuantity,
+            boolean succeededLastRepetition) {
+
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
@@ -31,6 +42,7 @@ public class Desk {
         this.scheduledDate = scheduledDate;
         this.lastRepeatDuration = lastRepeatDuration;
         this.repetitionDay = repetitionDay;
+        this.repetitionQuantity = repetitionQuantity;
         this.succeededLastRepetition = succeededLastRepetition;
     }
 
@@ -44,11 +56,19 @@ public class Desk {
         this.scheduledDate = currentDate + 600000;
         this.lastRepeatDuration = 900000000;
         this.repetitionDay = 1;
+        this.repetitionQuantity = 0;
         this.succeededLastRepetition = true;
     }
 
     @Ignore
-    public Desk(String name, long creationDate, long lastRepetitionDate, long scheduledDate, int lastRepeatDuration, int repetitionDay) {
+    public Desk(
+            String name,
+            long creationDate,
+            long lastRepetitionDate,
+            long scheduledDate,
+            int lastRepeatDuration,
+            int repetitionDay) {
+
         this.name = name;
         this.creationDate = creationDate;
         this.lastRepetitionDate = lastRepetitionDate;
@@ -84,6 +104,17 @@ public class Desk {
 
     public int getRepetitionDay() {
         return repetitionDay;
+    }
+
+    public void setRepetitionDay(int day) {
+        repetitionDay = day;
+    }
+
+    public int getRepetitionQuantity() {
+        return repetitionQuantity;
+    }
+    public void setRepetitionQuantity(int repetitionQuantity) {
+        repetitionQuantity = repetitionQuantity;
     }
 
     public boolean isSucceededLastRepetition() {

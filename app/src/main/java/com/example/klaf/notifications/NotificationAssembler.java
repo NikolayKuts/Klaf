@@ -15,6 +15,9 @@ import com.example.klaf.R;
 import com.example.klaf.screens.MainActivity;
 
 public class NotificationAssembler {
+    private static final String CHANEL_NAME = "chanel_1";
+    private static final String CHANEL_ID = "ID";
+
     private Context context;
     private Notification notification;
     private NotificationManager notificationManager;
@@ -34,7 +37,7 @@ public class NotificationAssembler {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         createNotificationChannel();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "ID");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANEL_ID);
         builder.setSmallIcon(R.drawable.ic_notification_desk)
                 .setContentTitle(title)
                 .setContentText(massage)
@@ -49,7 +52,7 @@ public class NotificationAssembler {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("ID", "channel", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(CHANEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("description");
             channel.enableLights(true);
             channel.setLightColor(Color.RED);

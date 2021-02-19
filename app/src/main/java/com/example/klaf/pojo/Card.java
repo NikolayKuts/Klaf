@@ -59,4 +59,12 @@ public class Card {
     public String toString() {
         return nativeWord + "";
     }
+
+    public boolean compareOt(Card card) {
+        return id == card.id
+                && idDesk == card.idDesk
+                && nativeWord.equals(card.nativeWord)
+                && foreignWord.equals(card.foreignWord)
+                && ipa.equals(card.ipa);
+    }
 }

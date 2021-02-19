@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -73,14 +74,24 @@ public class EditCardActivity extends AppCompatActivity {
     }
 
     public void onClickApplyChanges(View view) {
+        Card generalCard = viewModel.getCardById(cardId);
         Card changeCard = getCard();
+        Toast toast;
         if (changeCard != null) {
-            viewModel.insertCard(changeCard);
-            Toast.makeText(this, "new card was added", Toast.LENGTH_LONG).show();
-            finish();
+            if (generalCard.compareOt(changeCard)) {
+                toast = Toast.makeText(this, "You haven't changed the card", Toast.LENGTH_SHORT);
+            } else {
+                viewModel.insertCard(changeCard);
+                toast = Toast.makeText(this, "The card has been changed", Toast.LENGTH_LONG);
+                finish();
+            }
         } else {
-            Toast.makeText(this, "native and foreign words must be filled", Toast.LENGTH_SHORT).show();
+            toast = Toast.makeText(this, "Native and foreign words must be filled", Toast.LENGTH_SHORT);
         }
+        float density = getApplicationContext().getResources().getDisplayMetrics().density;
+        int pixel = (int) (100 * density);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     private Card getCard() {
@@ -91,7 +102,7 @@ public class EditCardActivity extends AppCompatActivity {
         String foreignWord = editTextForeignWord.getText().toString().trim();
         String ipaTemplate = editTextIpa.getText().toString().trim();
         String ipa = ipaProcesser.getCodedIpaForDB(checkedLetterHolders, ipaTemplate);
-        if (!nativeWord.isEmpty() || !foreignWord.isEmpty()) {
+        if (!nativeWord.isEmpty() && !foreignWord.isEmpty()) {
             changedCard = new Card(cardId, idDesk, nativeWord, foreignWord, ipa);
         }
         return changedCard;

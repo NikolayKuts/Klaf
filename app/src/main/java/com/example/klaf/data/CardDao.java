@@ -32,4 +32,7 @@ public interface CardDao {
 
     @Query("DELETE FROM card WHERE idDesk = :deskId")
     void deleteCardsByDeskId(int deskId);
+
+    @Query("SELECT COUNT(*) FROM card WHERE idDesk = :deskId")
+    int getCardQuantityByDeskId(int deskId);
 }

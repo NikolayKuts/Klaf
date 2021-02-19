@@ -12,7 +12,8 @@
     <color name="red">#D65858</color>
     <color name="transparent">#08FFFFFF</color>
     <color name="hint">#777777</color>
-    <color name="word">#C8D54A</color>
+    <color name="word_front">#CFD685</color>
+    <color name="word_back">#81B7BD</color>
 
     <color name="item_desk_background_dark">#6A656565</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.klaf.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.example.klaf.IpaProcesser;
 import com.example.klaf.MyTimer;
 import com.example.klaf.R;
 import com.example.klaf.adapters.SoundsIpaAdapter;
+import com.example.klaf.data.OnClickAudioPlayer;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,7 +32,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 public class LessonActivity extends AppCompatActivity {
     private static final int EASE_LEVEL_EASY = 0;
@@ -37,10 +40,14 @@ public class LessonActivity extends AppCompatActivity {
     public static final String TAG_CARD_ID = "card_id";
 
     private TextView textViewWord;
+    private TextView textViewWordType1;
+    private TextView textViewWordType2;
+
     private TextView textViewTimeCounter;
     private TextView textViewDeskName;
     private RecyclerView recyclerViewIpa;
 
+    private Switch switchRepetitionOrder;
 
     private Card startElement;
     private Card goodElement;
@@ -71,9 +78,12 @@ public class LessonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lesson);
 
         textViewWord = findViewById(R.id.textViewWord);
+        textViewWordType1 = findViewById(R.id.textViewWordTypeFront);
+        textViewWordType2 = findViewById(R.id.textViewWordTypeBack);
         textViewTimeCounter = findViewById(R.id.textViewTimeCounter);
         textViewDeskName = findViewById(R.id.textViewLessonDeskName);
         recyclerViewIpa = findViewById(R.id.recyclerViewIpa);
+        switchRepetitionOrder = findViewById(R.id.switch1);
 
         main = findViewById(R.id.floatingActionButtonMain);
         button1 = findViewById(R.id.floatingActionButtonAddCard);
@@ -111,12 +121,24 @@ public class LessonActivity extends AppCompatActivity {
 
         setVisibilityOnButtons(false);
 
+        switchRepetitionOrder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setTextViewContent();
+                setSoundAdapterContent();
+                setTextOnLessonOrder(isChecked);
+                textViewWord.setClickable(isChecked);
+            }
+        });
+        textViewWord.setOnClickListener(new OnClickAudioPlayer());
+        textViewWord.setClickable(false);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        front = false;
+        front = true;
         lessonDesk = viewModel.getDeskById(deskId);
         cards.clear();
         cards.addAll(viewModel.getCardsByDeskId(deskId));
@@ -187,27 +209,65 @@ public class LessonActivity extends AppCompatActivity {
             textViewWord.setTextColor(getResources().getColor(R.color.hint));
         } else {
             Card card = cards.get(0);
-            if (front) {
-                textViewWord.setText(card.getForeignWord());
+
+            if (switchRepetitionOrder.isChecked()) {
+                if (front) {
+                    textViewWord.setText(card.getForeignWord());
+                } else {
+                    textViewWord.setText(card.getNativeWord());
+                }
+
             } else {
-                textViewWord.setText(card.getNativeWord());
+                if (front) {
+                    textViewWord.setText(card.getNativeWord());
+                } else {
+                    textViewWord.setText(card.getForeignWord());
+                }
             }
-            textViewWord.setTextColor(getResources().getColor(R.color.word));
+            setTextWordColorBySide();
+
         }
     }
+
+    private void setTextWordColorBySide() {
+        if (front) {
+            textViewWord.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.word_front));
+        } else {
+            textViewWord.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.word_back));
+        }
+    }
+
+    private void setTextOnLessonOrder(boolean isChecked) {
+        if (isChecked) {
+            textViewWordType1.setText("F");
+            textViewWordType2.setText("N");
+        } else {
+            textViewWordType1.setText("N");
+            textViewWordType2.setText("F");
+        }
+    }
+
 
     private void setSoundAdapterContent() {
         IpaProcesser ipaProcesser = new IpaProcesser();
         if (!cards.isEmpty()) {
             Card card = cards.get(0);
-            if (!front) {
-                soundList.clear();
+
+            if (switchRepetitionOrder.isChecked()) {
+                if (front) {
+                    soundList.clear();
+                    soundList.addAll(ipaProcesser.getDecodeSoundsListFromIpa(card.getIpa()));
+                } else {
+                    soundList.clear();
+                }
             } else {
-                soundList.clear();
-                soundList.addAll(ipaProcesser.getDecodeSoundsListFromIpa(card.getIpa()));
+                if (front) {
+                    soundList.clear();
+                } else {
+                    soundList.clear();
+                    soundList.addAll(ipaProcesser.getDecodeSoundsListFromIpa(card.getIpa()));
+                }
             }
-        } else {
-            soundList.clear();
         }
         soundsIpaAdapter.notifyDataSetChanged();
     }
@@ -238,6 +298,18 @@ public class LessonActivity extends AppCompatActivity {
         front = !front;
         setTextViewContent();
         setSoundAdapterContent();
+        setOnTextViewWordClickable(switchRepetitionOrder.isChecked());
+    }
+
+    private void setOnTextViewWordClickable(boolean isChecked) {
+        boolean clickable;
+
+        if (isChecked) {
+                clickable = front;
+        } else {
+            clickable = !front;
+        }
+        textViewWord.setClickable(clickable);
     }
 
     public void onClickEasy(View view) {
@@ -259,9 +331,10 @@ public class LessonActivity extends AppCompatActivity {
 
             moveCardByEaseLevel(EASE_LEVEL_EASY);
             onFinishLesson();
-            front = false;
+            front = true;
             setTextViewContent();
             setSoundAdapterContent();
+            setOnTextViewWordClickable(switchRepetitionOrder.isChecked());
         }
         closeFloatingButtonIfOpened();
         Log.i("TAG", "onClickGood: " + cards.toString());
@@ -272,9 +345,10 @@ public class LessonActivity extends AppCompatActivity {
             goodElement = cards.get(0);
 
             moveCardByEaseLevel(EASE_LEVEL_GOOD);
-            front = false;
+            front = true;
             setTextViewContent();
             setSoundAdapterContent();
+            setOnTextViewWordClickable(switchRepetitionOrder.isChecked());
         }
         closeFloatingButtonIfOpened();
         Log.i("TAG", "onClickGood: " + cards.toString());
@@ -285,9 +359,10 @@ public class LessonActivity extends AppCompatActivity {
             badElement = cards.get(0);
 
             moveCardByEaseLevel(EASE_LEVEL_BAD);
-            front = false;
+            front = true;
             setTextViewContent();
             setSoundAdapterContent();
+            setOnTextViewWordClickable(switchRepetitionOrder.isChecked());
         }
         closeFloatingButtonIfOpened();
         Log.i("TAG", "onClickGood: " + cards.toString());
@@ -384,15 +459,20 @@ public class LessonActivity extends AppCompatActivity {
                     && badElement == null) {
 
                 timer.stopCount();
-                showFinishDialog();
-                setVisibilityOnButtons(false);
+                Desk updatedDesk = getUpdatedDesk();
+                viewModel.insertDesk(updatedDesk);
 
+                showFinishDialog(updatedDesk);
+                setVisibilityOnButtons(false);
+                lessonDesk = viewModel.getDeskById(deskId);
+                cards.clear();
+                cards.addAll(viewModel.getCardsByDeskId(deskId));
                 startElement = null;
             }
         }
     }
 
-    private void showFinishDialog() {
+    private void showFinishDialog(Desk updatedDesk) {
         DateWorker dateWorker = new DateWorker();
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_end_repetition);
@@ -402,12 +482,25 @@ public class LessonActivity extends AppCompatActivity {
         TextView textViewNewScheduledDate = dialog.findViewById(R.id.textViewValueScheduldDate);
         TextView textViewLastScheduledDate = dialog.findViewById(R.id.textViewValueLastScheduledDate);
 
+        textViewLastDuration.setText(timer.getTimeAsString(lessonDesk.getLastRepeatDuration()));
+        textViewCurrentDuration.setText(timer.getTimeAsString(updatedDesk.getLastRepeatDuration()));
+        textViewNewScheduledDate.setText(dateWorker.getFormattedDate(updatedDesk.getScheduledDate()));
+        textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
+        dialog.show();
+    }
+
+    private Desk getUpdatedDesk() {
+
+        DateWorker dateWorker = new DateWorker();
         long currentDate = dateWorker.getCurrentDate();
         int currentRepetitionDuration = timer.getSavedTotalSeconds();
         long newScheduledDate = dateWorker.getScheduledDateNextRepetition(lessonDesk, currentRepetitionDuration);
         int updatedRepetitionDay = dateWorker.getUpdatedRepetitionDay(lessonDesk); // method getUpdated
+        int updatedRepetitionQuantity = lessonDesk.getRepetitionQuantity() + 1;
         boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
-        Desk updatedDesk = new Desk(
+
+        //        viewModel.insertDesk(updatedDesk);
+        return new Desk(
                 deskId,
                 lessonDesk.getName(),
                 lessonDesk.getCreationDate(),
@@ -415,15 +508,8 @@ public class LessonActivity extends AppCompatActivity {
                 newScheduledDate,
                 currentRepetitionDuration,
                 updatedRepetitionDay,
+                updatedRepetitionQuantity,
                 updatedSucceededLastRepetition);
-
-        viewModel.insertDesk(updatedDesk);
-
-        textViewLastDuration.setText(String.format(Locale.getDefault(), "%d", lessonDesk.getLastRepeatDuration()));
-        textViewCurrentDuration.setText(textViewTimeCounter.getText());
-        textViewNewScheduledDate.setText(dateWorker.getFormattedDate(newScheduledDate));
-        textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
-        dialog.show();
     }
 
     private void setVisibilityOnButtons(boolean visible) {
