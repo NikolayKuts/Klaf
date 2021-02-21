@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -92,52 +93,12 @@ public class MainActivity extends AppCompatActivity {
         firstStart = sharedPreferences.getBoolean("first_start", true);
 
         runRepetitionDayUpdater(firstStart);
+
         if (firstStart) {
             sharedPreferences.edit().putBoolean("first_start", false).apply();
         }
 
-
-
-
 //        deleteDatabase("klaf.db");
-//        Desk desk2 = new Desk("test", new DateWorker().getCurrentDate());
-//        viewModel.insertDesk(desk2);
-
-//        LiveData<List<Desk>> liveData = viewModel.getDesks();
-//        List<Desk> arrayList = liveData.getValue();
-//        desks.addAll(viewModel.getDesks().getValue());
-
-//        Desk desk3 = new Desk("name3", "start date3", "end date3", 0.0);
-//
-//        Desk desk4 = new Desk("name3", "start date3", "end date3", 0.0);
-//        Desk desk5 = new Desk("name3", "start date3", "end date3", 0.0);
-//        Desk desk6 = new Desk("name3", "start date3", "end date3", 0.0);
-//        Desk desk7 = new Desk("name3", "start date3", "end date3", 0.0);
-//
-//
-//        Desk desk1 = new Desk("name1", "start date1", "end date1", 0.0);
-//        viewModel.insertDesk(desk1);
-//        for (int i = 0; i < 10; i++) {
-//            Log.i("log", "isn't empty");
-//            viewModel.insertCard(new Card(1, "слово_" + i, "word_" + i, "[fafda]_" + i));
-//        }
-//        viewModel.insertDesk(desk3);
-//
-//        viewModel.insertDesk(desk4);
-//        viewModel.insertDesk(desk5);
-//        viewModel.insertDesk(desk6);
-//        viewModel.insertDesk(desk7);
-////////////////////////////////////
-//        ComponentName componentName = new ComponentName(getApplicationContext(), CheckerJobService.class);
-//        JobInfo.Builder infoBuilder = new JobInfo.Builder(1234567, componentName);
-//        infoBuilder.setMinimumLatency(10000)
-//                .setOverrideDeadline(10000);
-//        JobInfo jobInfo = infoBuilder.build();
-//        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-//        jobScheduler.schedule(jobInfo);
-
-
-
     }
 
     private void runRepetitionDayUpdater(boolean firstStart) {
@@ -155,12 +116,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        desks.clear();
+        desks.addAll(viewModel.getDeskList());
         cardQuantityInDesk.clear();
         cardQuantityInDesk.addAll(viewModel.getCardQuantityList());
         adapter.notifyDataSetChanged();
     }
 
-    public void onCreatDesk(View view) {
+    public void onCreateDesk(View view) {
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_anim);
         view.startAnimation(animation);
         Dialog dialog = new Dialog(this);
@@ -169,26 +132,19 @@ public class MainActivity extends AppCompatActivity {
         Button buttonConfirm = dialog.findViewById(R.id.buttonConfirm);
         Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
         dialog.show();
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        buttonConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String deskName = editText.getText().toString().trim();
 
-                if (deskName.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT).show();
-                } else {
-                    DateWorker dateWorker = new DateWorker();
-                    long currentTime = dateWorker.getCurrentDate();
-                    Desk newDesk = new Desk(deskName, currentTime);
-                    viewModel.insertDesk(newDesk);
-                    dialog.dismiss();
-                }
+        buttonCancel.setOnClickListener(v -> dialog.dismiss());
+        buttonConfirm.setOnClickListener(v -> {
+            String deskName = editText.getText().toString().trim();
+
+            if (deskName.isEmpty()) {
+                Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                DateWorker dateWorker = new DateWorker();
+                long currentTime = dateWorker.getCurrentDate();
+                Desk newDesk = new Desk(deskName, currentTime);
+                viewModel.insertDesk(newDesk);
+                dialog.dismiss();
             }
         });
     }
@@ -201,20 +157,12 @@ public class MainActivity extends AppCompatActivity {
         Button buttonDelete = dialog.findViewById(R.id.buttonDeleteDeskRemoving);
         Button buttonCancel = dialog.findViewById(R.id.buttonCancelDeskRemoving);
 
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.deleteCardsByDeskId(desk.getId());
-                viewModel.removeDesk(desk);
-                dialog.dismiss();
-            }
+        buttonDelete.setOnClickListener(v -> {
+            viewModel.deleteCardsByDeskId(desk.getId());
+            viewModel.removeDesk(desk);
+            dialog.dismiss();
         });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        buttonCancel.setOnClickListener(v -> dialog.dismiss());
         textViewDeskName.setText(desk.getName());
         dialog.show();
     }
@@ -231,34 +179,26 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
 
-        buttonCancelChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        buttonCancelChanges.setOnClickListener(v -> dialog.dismiss());
 
-        buttonApplyChangedDeskName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String deskName = editTextDeskName.getText().toString();
-                Toast toast;
+        buttonApplyChangedDeskName.setOnClickListener(v -> {
+            String deskName = editTextDeskName.getText().toString();
+            Toast toast;
 
-                if (deskName.isEmpty()) {
-                    toast = Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT);
+            if (deskName.isEmpty()) {
+                toast = Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT);
+            } else {
+                if (desk.getName().equals(deskName)) {
+                    toast = Toast.makeText(MainActivity.this, "You haven't changed the name", Toast.LENGTH_SHORT);
                 } else {
-                    if (desk.getName().equals(deskName)) {
-                        toast = Toast.makeText(MainActivity.this, "You haven't changed the name", Toast.LENGTH_SHORT);
-                    } else {
-                        desk.setName(deskName);
-                        viewModel.insertDesk(desk);
-                        dialog.dismiss();
-                        toast = Toast.makeText(MainActivity.this, "The name has been changed", Toast.LENGTH_SHORT);
-                    }
+                    desk.setName(deskName);
+                    viewModel.insertDesk(desk);
+                    dialog.dismiss();
+                    toast = Toast.makeText(MainActivity.this, "The name has been changed", Toast.LENGTH_SHORT);
                 }
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
             }
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         });
 
     }
@@ -277,41 +217,29 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
 
-        buttonCallDeletingDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDeletingDeskDialog(desk);
-                dialog.dismiss();
-            }
+        buttonCallDeletingDialog.setOnClickListener(v -> {
+            showDeletingDeskDialog(desk);
+            dialog.dismiss();
         });
-        buttonCallEditingDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditingDeskDialog(desk);
-                dialog.dismiss();
-            }
+        buttonCallEditingDialog.setOnClickListener(v -> {
+            showEditingDeskDialog(desk);
+            dialog.dismiss();
         });
-        buttonShowCardsViewer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewModel.getCardsByDeskId(desk.getId()).isEmpty()) {
-                    Toast.makeText(MainActivity.this, "The desk is empty", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(MainActivity.this, CardViewerActivity.class);
-                    intent.putExtra(TAG_DESK_ID, desk.getId());
-                    startActivity(intent);
-                    dialog.dismiss();
-                }
-            }
-        });
-        buttonToAddCardActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
+        buttonShowCardsViewer.setOnClickListener(v -> {
+            if (viewModel.getCardsByDeskId(desk.getId()).isEmpty()) {
+                Toast.makeText(MainActivity.this, "The desk is empty", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(MainActivity.this, CardViewerActivity.class);
                 intent.putExtra(TAG_DESK_ID, desk.getId());
                 startActivity(intent);
                 dialog.dismiss();
             }
+        });
+        buttonToAddCardActivity.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
+            intent.putExtra(TAG_DESK_ID, desk.getId());
+            startActivity(intent);
+            dialog.dismiss();
         });
     }
 

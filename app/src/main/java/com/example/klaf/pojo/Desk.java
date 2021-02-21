@@ -124,4 +124,19 @@ public class Desk {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Desk{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", creationDate=" + creationDate +
+                ", lastRepetitionDate=" + lastRepetitionDate +
+                ", scheduledDate=" + scheduledDate +
+                ", lastRepeatDuration=" + lastRepeatDuration +
+                ", repetitionDay=" + repetitionDay +
+                ", repetitionQuantity=" + repetitionQuantity +
+                ", succeededLastRepetition=" + succeededLastRepetition +
+                '}' + "\n";
+    }
 }

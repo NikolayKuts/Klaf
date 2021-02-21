@@ -65,6 +65,22 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public List<Desk> getDeskList() {
+        List<Desk> result = null;
+        try {
+            result = new GetDeskListTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    private static class GetDeskListTask extends AsyncTask<Void, Void, List<Desk>> {
+        @Override
+        protected List<Desk> doInBackground(Void... voids) {
+            return database.deskDao().getDeckList();
+        }
+    }
+
     public void removeDesk(Desk desk) {
         new RemoveDeskTask().execute(desk);
     }
@@ -77,12 +93,12 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    private static class GetDeskListTask extends AsyncTask<Void, Void, List<Desk>> {
-        @Override
-        protected List<Desk> doInBackground(Void... voids) {
-            return database.deskDao().getDeckList();
-        }
-    }
+//    private static class GetDeskListTask extends AsyncTask<Void, Void, List<Desk>> {
+//        @Override
+//        protected List<Desk> doInBackground(Void... voids) {
+//            return database.deskDao().getDeckList();
+//        }
+//    }
 
     public List<Integer> getCardQuantityList() {
         List<Integer> result = new ArrayList<>();

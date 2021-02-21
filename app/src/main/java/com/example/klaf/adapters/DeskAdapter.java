@@ -62,7 +62,8 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
         holder.textViewDeskName.setText(desk.getName());
         holder.textViewScheduledDate.setText(scheduledDate);
         holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
-        holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d_d", desk.getRepetitionDay()));
+        holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d", desk.getRepetitionDay()));
+        holder.textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", desk.getRepetitionQuantity()));
         holder.setBackgroundColor(position);
     }
 
@@ -77,6 +78,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
         private final TextView textViewScheduledDate;
         private final TextView textViewCardsQuantity;
         private final TextView textViewRepetitionDay;
+        private final TextView textViewRepetitionQuantity;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +87,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
             textViewScheduledDate = itemView.findViewById(R.id.textViewDeskScheduledDate);
             textViewCardsQuantity = itemView.findViewById(R.id.textViewDeskQuantityCars);
             textViewRepetitionDay = itemView.findViewById(R.id.textViewRepetitionDay);
+            textViewRepetitionQuantity = itemView.findViewById(R.id.textViewRepetitionQuantity);
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
