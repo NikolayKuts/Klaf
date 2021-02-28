@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.solver.state.State;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.klaf.DateWorker;
 import com.example.klaf.R;
 import com.example.klaf.pojo.Desk;
-import com.example.klaf.screens.MainViewModel;
 
 import java.util.List;
 import java.util.Locale;
@@ -57,10 +55,17 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         Desk desk = desks.get(position);
+        DateWorker dateWorker = new DateWorker();
+
         int size = cardQuantityList.get(position);
-        String scheduledDate = new DateWorker().getFormattedDate(desk.getScheduledDate());
+        String scheduledDate = dateWorker.getFormattedDate(desk.getScheduledDate());
         holder.textViewDeskName.setText(desk.getName());
         holder.textViewScheduledDate.setText(scheduledDate);
+        if (dateWorker.getCurrentDate() > desk.getScheduledDate()) {
+            holder.textViewScheduledDate.setTextColor(ContextCompat.getColor(holder.textViewScheduledDate.getContext(), R.color.scheduled_date_delay));
+        } else {
+            holder.textViewScheduledDate.setTextColor(ContextCompat.getColor(holder.textViewScheduledDate.getContext(), R.color.scheduled_date));
+        }
         holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
         holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d", desk.getRepetitionDay()));
         holder.textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", desk.getRepetitionQuantity()));

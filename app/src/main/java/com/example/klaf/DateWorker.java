@@ -7,13 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DateWorker {
-    private static final double DERATION_FACTOR = 0.1;
-    private static final double FIRST_DAY_FACTOR = 0.30;
-    private static final double SECOND_DAY_FACTOR = 0.40;
-    private static final double THIRD_DAY_FACTOR = 0.55;
-    private static final double FORTH_DAY_FACTOR = 0.75;
+    private static final double DERATION_FACTOR = 0.07;
+    private static final double FIRST_DAY_FACTOR = 0.2;
+    private static final double SECOND_DAY_FACTOR = 0.3;
+    private static final double THIRD_DAY_FACTOR = 0.4;
+    private static final double FORTH_DAY_FACTOR = 0.5;
     private static final double WHOLE_DAY_FACTOR = 1.0;
     private static final double DECREASE_FACTOR = 0.1;
 
@@ -37,16 +38,24 @@ public class DateWorker {
     }
 
     public long getScheduledDateNextRepetition(Desk desk, int currentRepetitionDuration) {
-        long newInterval;
+        long newInterval = 0;
         long lastInterval = desk.getScheduledDate() - desk.getLastRepetitionDate();
 
-        if (currentRepetitionDuration <= desk.getLastRepeatDuration() + desk.getLastRepeatDuration() * DERATION_FACTOR) {
-            newInterval = lastInterval + (lastInterval * getDayFactorByNumberDay(desk.getRepetitionDay()));
-        } else {
-            if (desk.isSucceededLastRepetition()) {
-                newInterval = lastInterval;
-            } else {
-                newInterval = lastInterval - (lastInterval * (long) DECREASE_FACTOR);
+        if (desk.getRepetitionQuantity() >= 5) {
+            if (desk.getRepetitionQuantity() == 5) {
+                lastInterval = TimeUnit.MINUTES.toMillis(15);
+            }
+
+            if (desk.getRepetitionQuantity() % 2 != 0) {
+                if (currentRepetitionDuration <= desk.getLastRepeatDuration() + desk.getLastRepeatDuration() * DERATION_FACTOR) {
+                    newInterval = lastInterval + (lastInterval * getDayFactorByNumberDay(desk.getRepetitionDay()));
+                } else {
+                    if (desk.isSucceededLastRepetition()) {
+                        newInterval = lastInterval;
+                    } else {
+                        newInterval = lastInterval - (lastInterval * (long) DECREASE_FACTOR);
+                    }
+                }
             }
         }
         return getCurrentDate() + newInterval;
@@ -95,6 +104,7 @@ public class DateWorker {
                 break;
             case 4:
                 result = FORTH_DAY_FACTOR;
+                break;
             default:
                 result = WHOLE_DAY_FACTOR;
         }

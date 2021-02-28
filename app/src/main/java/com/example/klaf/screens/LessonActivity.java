@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +29,10 @@ import com.example.klaf.MyTimer;
 import com.example.klaf.R;
 import com.example.klaf.adapters.SoundsIpaAdapter;
 import com.example.klaf.data.OnClickAudioPlayer;
+import com.example.klaf.notifications.NotificationAssembler;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
+import com.example.klaf.services.RepetitionReminder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -305,7 +311,7 @@ public class LessonActivity extends AppCompatActivity {
         boolean clickable;
 
         if (isChecked) {
-                clickable = front;
+            clickable = front;
         } else {
             clickable = !front;
         }
@@ -468,6 +474,23 @@ public class LessonActivity extends AppCompatActivity {
                 cards.clear();
                 cards.addAll(viewModel.getCardsByDeskId(deskId));
                 startElement = null;
+
+                long currentTime = System.currentTimeMillis();
+                if (updatedDesk.getScheduledDate() > currentTime) {
+                    ComponentName componentName = new ComponentName(getApplicationContext(), RepetitionReminder.class);
+                    int serviceId = (int) currentTime;
+                    long scheduledInterval = updatedDesk.getScheduledDate() - currentTime;
+                    PersistableBundle bundle = new PersistableBundle();
+                    bundle.putString("desk_name", lessonDesk.getName());
+                    JobInfo.Builder infoBuilder = new JobInfo.Builder(serviceId, componentName);
+                    infoBuilder.setMinimumLatency(scheduledInterval)
+                            .setOverrideDeadline(scheduledInterval)
+                            .setPersisted(true)
+                            .setExtras(bundle);
+                    JobInfo jobInfo = infoBuilder.build();
+                    JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                    jobScheduler.schedule(jobInfo);
+                }
             }
         }
     }
@@ -483,7 +506,7 @@ public class LessonActivity extends AppCompatActivity {
         TextView textViewLastScheduledDate = dialog.findViewById(R.id.textViewValueLastScheduledDate);
 
         textViewLastDuration.setText(timer.getTimeAsString(lessonDesk.getLastRepeatDuration()));
-        textViewCurrentDuration.setText(timer.getTimeAsString(updatedDesk.getLastRepeatDuration()));
+        textViewCurrentDuration.setText(timer.getTimeAsString(timer.getSavedTotalSeconds()));
         textViewNewScheduledDate.setText(dateWorker.getFormattedDate(updatedDesk.getScheduledDate()));
         textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
         dialog.show();
@@ -492,8 +515,17 @@ public class LessonActivity extends AppCompatActivity {
     private Desk getUpdatedDesk() {
 
         DateWorker dateWorker = new DateWorker();
-        long currentDate = dateWorker.getCurrentDate();
-        int currentRepetitionDuration = timer.getSavedTotalSeconds();
+        long updatedLastRepetitionDate;
+        int currentRepetitionDuration;
+        if (lessonDesk.getRepetitionQuantity() % 2 != 0) {
+            updatedLastRepetitionDate = dateWorker.getCurrentDate();
+            currentRepetitionDuration = timer.getSavedTotalSeconds();
+        } else {
+            updatedLastRepetitionDate = lessonDesk.getLastRepetitionDate();
+            currentRepetitionDuration = lessonDesk.getLastRepeatDuration();
+        }
+
+//        int currentRepetitionDuration = timer.getSavedTotalSeconds();
         long newScheduledDate = dateWorker.getScheduledDateNextRepetition(lessonDesk, currentRepetitionDuration);
         int updatedRepetitionDay = dateWorker.getUpdatedRepetitionDay(lessonDesk); // method getUpdated
         int updatedRepetitionQuantity = lessonDesk.getRepetitionQuantity() + 1;
@@ -504,7 +536,8 @@ public class LessonActivity extends AppCompatActivity {
                 deskId,
                 lessonDesk.getName(),
                 lessonDesk.getCreationDate(),
-                currentDate,
+                updatedLastRepetitionDate,
+
                 newScheduledDate,
                 currentRepetitionDuration,
                 updatedRepetitionDay,

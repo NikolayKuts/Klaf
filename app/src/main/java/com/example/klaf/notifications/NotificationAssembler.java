@@ -17,9 +17,11 @@ import com.example.klaf.screens.MainActivity;
 public class NotificationAssembler {
     private static final String CHANEL_NAME = "chanel_1";
     private static final String CHANEL_ID = "ID";
+    public static final int NOTIFICATION_ID_DEFAULT = 1;
 
     private Context context;
     private Notification notification;
+    private int notificationId;
     private NotificationManager notificationManager;
 
     public NotificationAssembler(Context context) {
@@ -46,8 +48,8 @@ public class NotificationAssembler {
         notification = builder.build();
     }
 
-    public void showNotification() {
-        notificationManager.notify(1, notification);
+    public void showNotification(int notificationId) {
+        notificationManager.notify(notificationId, notification);
     }
 
     private void createNotificationChannel() {

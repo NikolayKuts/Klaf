@@ -27,14 +27,14 @@
         android:id="@+id/textViewDeskQuantityCars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:paddingStart="4dp"
         android:text="Text"
         android:textColor="#DCCF62"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.545" />
 
     <TextView
         android:id="@+id/textViewDeskScheduledDate"
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Text"
-        android:textColor="@color/red"
+        android:textColor="#AA9BC5"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textViewRepetitionDayHint"
@@ -98,5 +98,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/textViewRepetitionDay"
         app:layout_constraintEnd_toStartOf="@+id/textViewDeskScheduledDate"
         app:layout_constraintTop_toTopOf="@+id/textViewRepetitionDay"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="w"
+        android:paddingStart="2dp"
+        android:textColor="@color/hint"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDeskQuantityCars"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewDeskQuantityCars"
         app:layout_constraintVertical_bias="0.8" />
 </androidx.constraintlayout.widget.ConstraintLayout>

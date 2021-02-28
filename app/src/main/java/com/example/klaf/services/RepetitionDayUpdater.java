@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepetitionDayUpdater extends JobService {
-    private static final int LATENCY = 43_200_000;
+    private static final int LATENCY = 21_600_000;
     private KlafDatabase database;
     private List<Desk> desks;
 
@@ -36,7 +36,7 @@ public class RepetitionDayUpdater extends JobService {
 
             NotificationAssembler notification = new NotificationAssembler(getApplicationContext());
             notification.setNotification("repetition days have been updated", "קלף");
-            notification.showNotification();
+            notification.showNotification(NotificationAssembler.NOTIFICATION_ID_DEFAULT);
 
             ComponentName componentName = new ComponentName(getApplicationContext(), RepetitionDayUpdater.class);
             int id = (int) currentTime;
@@ -66,7 +66,7 @@ public class RepetitionDayUpdater extends JobService {
             Log.i("log", "Desk: ");
             Log.i("log", "days  " + days);
             if (desk.getRepetitionDay() < days) {
-                desk.setRepetitionDay(days);
+                desk.setRepetitionDay((int) days + 1);
             }
         }
     }

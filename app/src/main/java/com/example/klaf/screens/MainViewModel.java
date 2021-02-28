@@ -48,6 +48,17 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public void insertDeskList(List<Desk> desks) {
+        new InsertDeskListTask().execute(desks);
+    }
+    private static class InsertDeskListTask extends AsyncTask<List<Desk>, Void, Void> {
+        @Override
+        protected Void doInBackground(List<Desk>... lists) {
+            database.deskDao().insertDeskList(lists[0]);
+            return null;
+        }
+    }
+
     public Desk getDeskById(int id) {
         Desk result = null;
         try {

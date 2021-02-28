@@ -41,7 +41,7 @@ public class CheckerJobService extends JobService {
                 NotificationAssembler notification = new NotificationAssembler(getApplicationContext());
 
                 notification.setNotification(dateWorker.getFormattedCurrentTime(), "קלף");
-                notification.showNotification();
+                notification.showNotification(NotificationAssembler.NOTIFICATION_ID_DEFAULT);
 
 
                 if (!canceled) {

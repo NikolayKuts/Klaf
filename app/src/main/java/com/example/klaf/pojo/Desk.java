@@ -53,8 +53,8 @@ public class Desk {
         this.name = name;
         this.creationDate = creationDate;
         this.lastRepetitionDate = currentDate;
-        this.scheduledDate = currentDate + 600000;
-        this.lastRepeatDuration = 900000000;
+        this.scheduledDate = currentDate;
+        this.lastRepeatDuration = 0;
         this.repetitionDay = 1;
         this.repetitionQuantity = 0;
         this.succeededLastRepetition = true;

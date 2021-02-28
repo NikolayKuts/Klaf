@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -14,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,8 +30,8 @@ import com.example.klaf.R;
 import com.example.klaf.adapters.DeskAdapter;
 import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Desk;
-import com.example.klaf.services.CheckerJobService;
 import com.example.klaf.services.RepetitionDayUpdater;
+import com.example.klaf.services.RepetitionReminder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         firstStart = sharedPreferences.getBoolean("first_start", true);
 
         runRepetitionDayUpdater(firstStart);
+        runRepetitionReminder(firstStart);
 
         if (firstStart) {
             sharedPreferences.edit().putBoolean("first_start", false).apply();
@@ -113,6 +114,51 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void runRepetitionReminder(boolean firstStart) {
+        if (firstStart) {
+            long currentTime = System.currentTimeMillis();
+            for (Desk desk : desks) {
+                if (desk.getScheduledDate() > currentTime) {
+                    ComponentName componentName = new ComponentName(getApplicationContext(), RepetitionReminder.class);
+                    int serviceId = (int) currentTime;
+                    long scheduledInterval = desk.getScheduledDate() - currentTime;
+                    PersistableBundle bundle = new PersistableBundle();
+                    bundle.putString("desk_name", desk.getName());
+                    JobInfo.Builder infoBuilder = new JobInfo.Builder(serviceId, componentName);
+                    infoBuilder.setMinimumLatency(scheduledInterval)
+                            .setOverrideDeadline(scheduledInterval)
+                            .setPersisted(true)
+                            .setExtras(bundle);
+                    JobInfo jobInfo = infoBuilder.build();
+                    JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                    jobScheduler.schedule(jobInfo);
+                }
+            }
+        }
+    }
+
+    private void updateRepetitionDate() {
+        for (Desk desk : desks) {
+        long daysInMilliseconds = System.currentTimeMillis() - desk.getCreationDate();
+        double days = (double) daysInMilliseconds / 86_400_000;
+        Log.i("log", "Desk: ");
+        Log.i("log", "days  " + days);
+        if (desk.getRepetitionDay() < days) {
+            desk.setRepetitionDay((int) days + 1);
+        }
+    }
+        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+//        scheduler.cancelAll();
+        List<JobInfo> jobInfos = scheduler.getAllPendingJobs();
+        Log.i("logi", "onResume: " + jobInfos.size());
+        int i = 0;
+        for (JobInfo jobinfo : jobInfos) {
+            Log.i("logi", "onResume: "+ i++ + jobinfo.getId());
+        }
+        viewModel.insertDeskList(desks);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -121,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         cardQuantityInDesk.clear();
         cardQuantityInDesk.addAll(viewModel.getCardQuantityList());
         adapter.notifyDataSetChanged();
+
     }
 
     public void onCreateDesk(View view) {

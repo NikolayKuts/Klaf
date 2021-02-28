@@ -16,4 +16,6 @@
     <color name="word_back">#81B7BD</color>
 
     <color name="item_desk_background_dark">#6A656565</color>
+    <color name="scheduled_date">#CD933D</color>
+    <color name="scheduled_date_delay">#DC7971</color>
 </resources>
