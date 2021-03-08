@@ -139,4 +139,8 @@ public class Desk {
                 ", succeededLastRepetition=" + succeededLastRepetition +
                 '}' + "\n";
     }
+
+    public void setScheduledDate(long scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
 }
