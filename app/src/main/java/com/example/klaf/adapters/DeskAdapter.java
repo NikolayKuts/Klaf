@@ -69,7 +69,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
         holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
         holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d", desk.getRepetitionDay()));
         holder.textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", desk.getRepetitionQuantity()));
-        holder.setBackgroundColor(position);
+        holder.setColorOnNameAndBackground(position);
     }
 
     @Override
@@ -112,11 +112,13 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.Holder> {
             });
         }
 
-        private void setBackgroundColor(int position) {
+        private void setColorOnNameAndBackground(int position) {
             if (position % 2 == 0) {
                 constraintLayout.setBackgroundColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_desk_background_dark));
+                textViewDeskName.setTextColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_desk_name_green));
             } else {
                 constraintLayout.setBackgroundColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.transparent));
+                textViewDeskName.setTextColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_desk_name_grey));
             }
         }
     }

@@ -12,7 +12,7 @@
         android:id="@+id/textViewWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="the desk is empty"
+        android:text="@string/the_desk_is_empty"
         android:textColor="#E8D743"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,51 +30,54 @@
         android:id="@+id/buttonTurn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Turn"
-        android:visibility="invisible"
+        android:backgroundTint="@color/green_button"
         android:onClick="onClickTurn"
+        android:text="@string/button_turn"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintVertical_bias="0.63" />
 
     <Button
         android:id="@+id/buttonEasy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onClickEasy"
-        android:text="Easy"
+        android:text="@string/button_easy"
+        android:backgroundTint="@color/green_button"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonGood"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonGood"
-        app:layout_constraintTop_toBottomOf="@+id/buttonTurn"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintStart_toEndOf="@+id/buttonGood"
+        app:layout_constraintTop_toTopOf="@+id/buttonGood" />
 
     <Button
         android:id="@+id/buttonGood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
+        android:backgroundTint="@color/green_button"
         android:onClick="onClickGood"
-        android:text="Good"
+        android:text="@string/button_good"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonEasy"
-        app:layout_constraintEnd_toStartOf="@+id/buttonEasy"
-        app:layout_constraintStart_toEndOf="@id/buttonBad"
-        app:layout_constraintTop_toTopOf="@+id/buttonEasy"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/buttonTurn"
+        app:layout_constraintStart_toStartOf="@+id/buttonTurn"
+        app:layout_constraintTop_toBottomOf="@+id/buttonTurn"
+        app:layout_constraintVertical_bias="0.23000002" />
 
     <Button
         android:id="@+id/buttonBad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bad"
-        android:visibility="invisible"
         android:onClick="onClickBad"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/button_bad"
+        android:backgroundTint="@color/green_button"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/buttonGood"
         app:layout_constraintEnd_toStartOf="@+id/buttonGood"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonGood" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -89,9 +92,10 @@
         android:id="@+id/textViewTimeCounter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00:0"
-        android:textSize="24sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/timer_zero"
         android:textColor="@color/hint"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -109,7 +113,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_baseline_fingerprint_24"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        android:contentDescription="@string/description_button_show_options" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonAddCard"
@@ -125,7 +130,8 @@
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButtonMain"
         app:maxImageSize="68dp"
         app:srcCompat="@drawable/ic_add"
-        app:tint="#BCB08C" />
+        app:tint="#BCB08C"
+        android:contentDescription="@string/description_button_add_card" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonEditCard"
@@ -142,7 +148,8 @@
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButton3"
         app:maxImageSize="30dp"
         app:srcCompat="@drawable/ic_edit"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        android:contentDescription="@string/description_button_edit_card" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton3"
@@ -158,7 +165,8 @@
         app:layout_constraintTop_toTopOf="@+id/floatingActionButtonMain"
         app:maxImageSize="35dp"
         app:srcCompat="@drawable/ic__delete_card"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        android:contentDescription="@string/description_button_delete_card" />
 
     <TextView
         android:id="@+id/textViewTitleDesk"
@@ -168,28 +176,31 @@
         android:fontFamily="@font/arapey_italic"
         android:paddingTop="3dp"
         android:paddingEnd="10dp"
-        android:text="desk:"
+        android:text="@string/title_desk"
         android:textColor="#9F9F9F"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewLessonDeskName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textViewLessonDeskName" />
+        app:layout_constraintTop_toTopOf="@+id/textViewLessonDeskName"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/textViewLessonDeskName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        tools:text="TextView"
         android:textColor="#E19F3E"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewTimeCounter"
         app:layout_constraintStart_toEndOf="@+id/textViewTitleDesk"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textViewTimeCounter" />
 
     <Button
         android:id="@+id/buttonStartLesson"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start"
+        android:text="@string/button_start"
+        android:backgroundTint="@color/green_button"
         android:onClick="onClickStartLesson"
         app:layout_constraintBottom_toBottomOf="@+id/buttonEasy"
         app:layout_constraintEnd_toEndOf="parent"
@@ -211,7 +222,7 @@
         android:id="@+id/textViewWordTypeFront"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="N"
+        android:text="@string/native_word"
         android:padding="3dp"
         android:layout_marginStart="10dp"
         android:drawablePadding="20dp"
@@ -224,9 +235,9 @@
         android:id="@+id/textViewArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="->"
+        android:text="@string/arrow"
         android:textColor="@color/hint"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewWordTypeFront"
         app:layout_constraintStart_toEndOf="@+id/textViewWordTypeFront"
         app:layout_constraintTop_toTopOf="@+id/textViewWordTypeFront" />
@@ -237,7 +248,7 @@
         android:layout_height="wrap_content"
         android:drawablePadding="20dp"
         android:padding="3dp"
-        android:text="F"
+        android:text="@string/foreign_word"
         android:textColor="@color/word_back"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textViewArrow"

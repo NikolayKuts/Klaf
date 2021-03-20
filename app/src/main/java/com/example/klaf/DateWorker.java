@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
 
 public class DateWorker {
     private static final double DERATION_FACTOR = 0.07;
-    private static final double FIRST_DAY_FACTOR = 0.3;
-    private static final double SECOND_DAY_FACTOR = 0.4;
-    private static final double THIRD_DAY_FACTOR = 0.5;
-    private static final double FORTH_DAY_FACTOR = 0.7;
+    private static final double FIRST_DAY_FACTOR = 0.4;
+    private static final double SECOND_DAY_FACTOR = 0.6;
+    private static final double THIRD_DAY_FACTOR = 0.8;
+//    private static final double FORTH_DAY_FACTOR = 0.7;
     private static final double WHOLE_DAY_FACTOR = 1.0;
     private static final double DECREASE_FACTOR = 0.1;
 
@@ -93,9 +93,9 @@ public class DateWorker {
             case 3:
                 result = THIRD_DAY_FACTOR;
                 break;
-            case 4:
-                result = FORTH_DAY_FACTOR;
-                break;
+//            case 4:
+//                result = FORTH_DAY_FACTOR;
+//                break;
             default:
                 result = WHOLE_DAY_FACTOR;
         }

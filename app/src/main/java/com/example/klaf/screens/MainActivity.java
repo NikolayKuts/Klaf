@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
     private List<Desk> desks;
     private List<Integer> cardQuantityInDesk;
-    private List<Card> cards;
     private DeskAdapter adapter;
     private RecyclerView recyclerView;
 
@@ -87,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
         if (firstStart) {
             sharedPreferences.edit().putBoolean("first_start", false).apply();
         }
-
-//        deleteDatabase("klaf.db");
     }
 
     @Override
@@ -103,40 +100,7 @@ public class MainActivity extends AppCompatActivity {
         runRepetitionDayUpdater(firstStart);
         runRepetitionReminder(firstStart);
 
-
-//        viewModel.getDesks().observe(this, new Observer<List<Desk>>() {
-//            @Override
-//            public void onChanged(List<Desk> desksFromDB) {
-//                desks.clear();
-//                desks.addAll(desksFromDB);
-//                cardQuantityInDesk.clear();
-//                cardQuantityInDesk.addAll(viewModel.getCardQuantityList());
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
-
-//        for (Desk desk : desks) {
-//            if (desk.getId() == 61) {
-//                desk.setScheduledDate(desk.getScheduledDate() + TimeUnit.MINUTES.toMillis(30));
-//            }
-//        }
-//        viewModel.insertDeskList(desks);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
-
-        Log.i("log", "onResume: " + new DateWorker().getFormattedDate(1614802145525L));
-
-
-        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-//        scheduler.cancelAll();
-        List<JobInfo> jobInfos = scheduler.getAllPendingJobs();
-        Log.i("logi", "onResume: " + jobInfos.size());
-        int i = 0;
-        for (JobInfo jobinfo : jobInfos) {
-            Log.i("logi", "onResume: " + i++ + jobinfo.getId());
-        }
-
-
+        showInfoForChecking();
     }
 
     private void runRepetitionDayUpdater(boolean firstStart) {
@@ -282,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
         Button buttonToAddCardActivity = dialog.findViewById(R.id.buttonToAddCardActivity);
 
         textViewTitle.setText(desk.getName());
-
         dialog.show();
 
         buttonCallDeletingDialog.setOnClickListener(v -> {
@@ -309,6 +272,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             dialog.dismiss();
         });
+    }
+
+    private void showInfoForChecking() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        List<JobInfo> jobInfos = scheduler.getAllPendingJobs();
+        Log.i("logi", "onResume: " + jobInfos.size());
+        int i = 0;
+        for (JobInfo jobinfo : jobInfos) {
+            Log.i("logi", "onResume: " + i++ + jobinfo.getId());
+        }
     }
 
 }

@@ -1,11 +1,18 @@
 <resources>
     <string name="app_name">Klaf</string>
-
-    <string-array name="test">
-        <item>fdadfafasdfasdfasddsf</item>
-        <item>fdadfasfasdfasdfadsf</item>
-        <item>fdadfafasddsf</item>
-        <item>fdadffasdfasdadsf</item>
-        <item>fdadffasdfasdfadsf</item>
-    </string-array>
+    <string name="the_desk_is_empty">the desk is empty</string>
+    <string name="button_turn">Turn</string>
+    <string name="button_easy">Easy</string>
+    <string name="button_good">Good</string>
+    <string name="button_bad">Bad</string>
+    <string name="timer_zero">00:0</string>
+    <string name="title_desk">desk:</string>
+    <string name="button_start">Start</string>
+    <string name="native_word">N</string>
+    <string name="arrow"><![CDATA[->]]></string>
+    <string name="foreign_word">F</string>
+    <string name="description_button_show_options">Button show options</string>
+    <string name="description_button_add_card">button add card</string>
+    <string name="description_button_edit_card">button edit card</string>
+    <string name="description_button_delete_card">button delete card</string>
 </resources>
