@@ -10,22 +10,22 @@ public class Card {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int idDesk;
-    private String nativeWord;
-    private String foreignWord;
-    private String ipa;
+    private final int idDeck;
+    private final String nativeWord;
+    private final String foreignWord;
+    private final String ipa;
 
     @Ignore
-    public Card(int idDesk, String nativeWord, String foreignWord, String ipa) {
-        this.idDesk = idDesk;
+    public Card(int idDeck, String nativeWord, String foreignWord, String ipa) {
+        this.idDeck = idDeck;
         this.nativeWord = nativeWord;
         this.ipa = ipa;
         this.foreignWord = foreignWord;
     }
 
-    public Card(int id, int idDesk, String nativeWord, String foreignWord, String ipa) {
+    public Card(int id, int idDeck, String nativeWord, String foreignWord, String ipa) {
         this.id = id;
-        this.idDesk = idDesk;
+        this.idDeck = idDeck;
         this.nativeWord = nativeWord;
         this.ipa = ipa;
         this.foreignWord = foreignWord;
@@ -39,8 +39,8 @@ public class Card {
         this.id = id;
     }
 
-    public int getIdDesk() {
-        return idDesk;
+    public int getIdDeck() {
+        return idDeck;
     }
 
     public String getNativeWord() {
@@ -55,14 +55,14 @@ public class Card {
         return foreignWord;
     }
 
-    @Override
-    public String toString() {
-        return nativeWord + "";
-    }
+//    @Override
+//    public String toString() {
+//        return nativeWord + "";
+//    }
 
     public boolean compareOt(Card card) {
         return id == card.id
-                && idDesk == card.idDesk
+                && idDeck == card.idDeck
                 && nativeWord.equals(card.nativeWord)
                 && foreignWord.equals(card.foreignWord)
                 && ipa.equals(card.ipa);

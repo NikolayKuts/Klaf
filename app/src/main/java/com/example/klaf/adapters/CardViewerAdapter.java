@@ -39,7 +39,7 @@ public class CardViewerAdapter extends RecyclerView.Adapter<CardViewerAdapter.Ho
         holder.textViewIpa.setText(ipaProcesser.getCompletedCouplesForCardViewer(card.getIpa()));
 
         if (position % 2 == 0) {
-            holder.constraintLayout.setBackgroundColor(ContextCompat.getColor(holder.textViewNativeWord.getContext(), R.color.item_desk_background_dark));
+            holder.constraintLayout.setBackgroundColor(ContextCompat.getColor(holder.textViewNativeWord.getContext(), R.color.item_deck_background_dark));
         } else {
             holder.constraintLayout.setBackgroundColor(ContextCompat.getColor(holder.textViewNativeWord.getContext(), R.color.transparent));
         }

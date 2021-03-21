@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.klaf.R;
 import com.example.klaf.adapters.CardViewerAdapter;
@@ -31,8 +30,8 @@ public class CardViewerActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        deskId = getIntent().getIntExtra(MainActivity.TAG_DESK_ID, -1);
-        List<Card> cards = new ArrayList<>(viewModel.getCardsByDeskId(deskId));
+        deskId = getIntent().getIntExtra(MainActivity.TAG_DECK_ID, -1);
+        List<Card> cards = new ArrayList<>(viewModel.getCardsByDeckId(deskId));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new CardViewerAdapter(cards);

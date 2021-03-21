@@ -9,8 +9,8 @@ import com.example.klaf.DateWorker;
 
 import java.util.List;
 
-@Entity(tableName = "desk")
-public class Desk {
+@Entity(tableName = "deck")
+public class Deck {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -24,7 +24,7 @@ public class Desk {
     private boolean succeededLastRepetition;
 
 
-    public Desk(
+    public Deck(
             int id,
             String name,
             long creationDate,
@@ -47,7 +47,7 @@ public class Desk {
     }
 
     @Ignore
-    public Desk(String name, long creationDate) {
+    public Deck(String name, long creationDate) {
         DateWorker dateWorker = new DateWorker();
         long currentDate = dateWorker.getCurrentDate();
         this.name = name;
@@ -61,7 +61,7 @@ public class Desk {
     }
 
     @Ignore
-    public Desk(
+    public Deck(
             String name,
             long creationDate,
             long lastRepetitionDate,
@@ -113,9 +113,6 @@ public class Desk {
     public int getRepetitionQuantity() {
         return repetitionQuantity;
     }
-    public void setRepetitionQuantity(int repetitionQuantity) {
-        repetitionQuantity = repetitionQuantity;
-    }
 
     public boolean isSucceededLastRepetition() {
         return succeededLastRepetition;
@@ -123,24 +120,5 @@ public class Desk {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Desk{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", creationDate=" + creationDate +
-                ", lastRepetitionDate=" + lastRepetitionDate +
-                ", scheduledDate=" + scheduledDate +
-                ", lastRepeatDuration=" + lastRepeatDuration +
-                ", repetitionDay=" + repetitionDay +
-                ", repetitionQuantity=" + repetitionQuantity +
-                ", succeededLastRepetition=" + succeededLastRepetition +
-                '}' + "\n";
-    }
-
-    public void setScheduledDate(long scheduledDate) {
-        this.scheduledDate = scheduledDate;
     }
 }

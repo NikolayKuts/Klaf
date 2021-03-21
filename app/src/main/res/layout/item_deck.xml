@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutDeskItem"
+    android:id="@+id/layoutDeckItem"
     android:background="@color/hint"
     android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp"
@@ -13,7 +13,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textViewDeskName"
+        android:id="@+id/textViewDeckName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewDeskQuantityCars"
+        android:id="@+id/textViewDeckQuantityCars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="4dp"
@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.545" />
 
     <TextView
-        android:id="@+id/textViewDeskScheduledDate"
+        android:id="@+id/textViewDeckScheduledDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="4dp"
@@ -83,7 +83,7 @@
         android:textColor="@color/hint"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewRepetitionQuantity"
-        app:layout_constraintEnd_toStartOf="@+id/textViewDeskQuantityCars"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDeckQuantityCars"
         app:layout_constraintTop_toTopOf="@+id/textViewRepetitionQuantity"
         app:layout_constraintVertical_bias="0.8" />
 
@@ -96,7 +96,7 @@
         android:textColor="@color/hint"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewRepetitionDay"
-        app:layout_constraintEnd_toStartOf="@+id/textViewDeskScheduledDate"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDeckScheduledDate"
         app:layout_constraintTop_toTopOf="@+id/textViewRepetitionDay"
         app:layout_constraintVertical_bias="0.8" />
 
@@ -108,8 +108,8 @@
         android:paddingStart="2dp"
         android:textColor="@color/hint"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewDeskQuantityCars"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDeckQuantityCars"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textViewDeskQuantityCars"
+        app:layout_constraintTop_toTopOf="@+id/textViewDeckQuantityCars"
         app:layout_constraintVertical_bias="0.8" />
 </androidx.constraintlayout.widget.ConstraintLayout>

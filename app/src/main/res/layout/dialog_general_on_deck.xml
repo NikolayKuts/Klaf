@@ -16,22 +16,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonCallDeletingDeskDialog"
+        android:id="@+id/buttonCallDeletingDeckDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delete desk"
+        android:text="Delete deck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleGeneral" />
 
     <Button
-        android:id="@+id/buttonCallEditingDeskDialog"
+        android:id="@+id/buttonCallEditingDeckDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit desk name"
+        android:text="Edit deck name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCallDeletingDeskDialog" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonCallDeletingDeckDialog" />
 
     <Button
         android:id="@+id/buttonShowCardsViewer"
@@ -40,7 +40,7 @@
         android:text="Show cards"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCallEditingDeskDialog" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonCallEditingDeckDialog" />
 
     <Button
         android:id="@+id/buttonToAddCardActivity"

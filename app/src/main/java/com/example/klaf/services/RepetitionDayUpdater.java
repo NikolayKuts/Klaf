@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.example.klaf.data.KlafDatabase;
 import com.example.klaf.notifications.NotificationAssembler;
-import com.example.klaf.pojo.Desk;
+import com.example.klaf.pojo.Deck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class RepetitionDayUpdater extends JobService {
     private static final int LATENCY = 21_600_000;
     private KlafDatabase database;
-    private List<Desk> desks;
+    private List<Deck> desks;
 
     @Override
     public void onCreate() {
@@ -30,9 +30,9 @@ public class RepetitionDayUpdater extends JobService {
     public boolean onStartJob(JobParameters params) {
         new Thread(() -> {
             long currentTime = System.currentTimeMillis();
-            desks.addAll(database.deskDao().getDeckList());
+            desks.addAll(database.deckDao().getDeckList());
             updateDeskListByRepetitionDay(desks, currentTime);
-            database.deskDao().insertDeskList(desks);
+            database.deckDao().insertDeckList(desks);
 
             NotificationAssembler notification = new NotificationAssembler(getApplicationContext());
             notification.setNotification("repetition days have been updated", "קלף");
@@ -58,9 +58,9 @@ public class RepetitionDayUpdater extends JobService {
         return false;
     }
 
-    private void updateDeskListByRepetitionDay(List<Desk> desks, long currentTime) {
+    private void updateDeskListByRepetitionDay(List<Deck> desks, long currentTime) {
 
-        for (Desk desk : desks) {
+        for (Deck desk : desks) {
             long daysInMilliseconds = currentTime - desk.getCreationDate();
             int days = (int) daysInMilliseconds / 86_400_000;
             Log.i("log", "Desk: ");

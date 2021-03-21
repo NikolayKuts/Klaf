@@ -6,12 +6,10 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.loader.content.AsyncTaskLoader;
-import androidx.room.Delete;
 
 import com.example.klaf.data.KlafDatabase;
 import com.example.klaf.pojo.Card;
-import com.example.klaf.pojo.Desk;
+import com.example.klaf.pojo.Deck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,106 +17,99 @@ import java.util.concurrent.ExecutionException;
 
 public class MainViewModel extends AndroidViewModel {
     private static KlafDatabase database;
-    private LiveData<List<Desk>> desks;
+    private LiveData<List<Deck>> decks;
     private LiveData<List<Card>> cards;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         database = KlafDatabase.getInstance(application);
-        desks = database.deskDao().getAllDesks();
+        decks = database.deckDao().getAllDecks();
         cards = database.cardDao().getAllCards();
     }
 
-    public LiveData<List<Desk>> getDesks() {
-        return desks;
+    public LiveData<List<Deck>> getDecks() {
+        return decks;
     }
 
     public LiveData<List<Card>> getCards() {
         return cards;
     }
 
-    public void insertDesk(Desk desk) {
-        new InsertDeskTask().execute(desk);
+    public void insertDeck(Deck deck) {
+        new InsertDeckTask().execute(deck);
     }
-    private static class InsertDeskTask extends AsyncTask<Desk, Void, Void> {
+    private static class InsertDeckTask extends AsyncTask<Deck, Void, Void> {
         @Override
-        protected Void doInBackground(Desk... desks) {
-            database.deskDao().insetDesk(desks[0]);
+        protected Void doInBackground(Deck... decks) {
+            database.deckDao().insetDeck(decks[0]);
             return null;
         }
     }
 
-    public void insertDeskList(List<Desk> desks) {
-        new InsertDeskListTask().execute(desks);
+    public void insertDeckList(List<Deck> decks) {
+        new InsertDeckListTask().execute(decks);
     }
-    private static class InsertDeskListTask extends AsyncTask<List<Desk>, Void, Void> {
+    private static class InsertDeckListTask extends AsyncTask<List<Deck>, Void, Void> {
         @Override
-        protected Void doInBackground(List<Desk>... lists) {
-            database.deskDao().insertDeskList(lists[0]);
+        protected Void doInBackground(List<Deck>... lists) {
+            database.deckDao().insertDeckList(lists[0]);
             return null;
         }
     }
 
-    public Desk getDeskById(int id) {
-        Desk result = null;
+    public Deck getDeckById(int id) {
+        Deck result = null;
         try {
-            result = new GetDeskByIdTask().execute(id).get();
+            result = new GetDeckByIdTask().execute(id).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    private static class GetDeskByIdTask extends AsyncTask<Integer, Void, Desk> {
+    private static class GetDeckByIdTask extends AsyncTask<Integer, Void, Deck> {
         @Override
-        protected Desk doInBackground(Integer... integers) {
-            return database.deskDao().getDeskById(integers[0]);
+        protected Deck doInBackground(Integer... integers) {
+            return database.deckDao().getDeckById(integers[0]);
         }
     }
 
-    public List<Desk> getDeskList() {
-        List<Desk> result = null;
+    public List<Deck> getDeckList() {
+        List<Deck> result = null;
         try {
-            result = new GetDeskListTask().execute().get();
+            result = new GetDeckListTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
-    private static class GetDeskListTask extends AsyncTask<Void, Void, List<Desk>> {
+    private static class GetDeckListTask extends AsyncTask<Void, Void, List<Deck>> {
         @Override
-        protected List<Desk> doInBackground(Void... voids) {
-            return database.deskDao().getDeckList();
+        protected List<Deck> doInBackground(Void... voids) {
+            return database.deckDao().getDeckList();
         }
     }
 
-    public void removeDesk(Desk desk) {
-        new RemoveDeskTask().execute(desk);
+    public void removeDeck(Deck deck) {
+        new RemoveDeckTask().execute(deck);
     }
 
-    private static class RemoveDeskTask extends AsyncTask<Desk, Void, Void> {
+    private static class RemoveDeckTask extends AsyncTask<Deck, Void, Void> {
         @Override
-        protected Void doInBackground(Desk... desks) {
-            database.deskDao().deleteDesk(desks[0]);
+        protected Void doInBackground(Deck... decks) {
+            database.deckDao().deleteDeck(decks[0]);
             return null;
         }
     }
-
-//    private static class GetDeskListTask extends AsyncTask<Void, Void, List<Desk>> {
-//        @Override
-//        protected List<Desk> doInBackground(Void... voids) {
-//            return database.deskDao().getDeckList();
-//        }
-//    }
 
     public List<Integer> getCardQuantityList() {
         List<Integer> result = new ArrayList<>();
-        List<Desk> current;
+        List<Deck> current;
         try {
-            current = new GetDeskListTask().execute().get();
+            current = new GetDeckListTask().execute().get();
 
-            for (Desk desk : current) {
-                int quantity = new GetCardQuantityByDeskId().execute(desk.getId()).get();
+            for (Deck deck : current) {
+                int quantity = new GetCardQuantityByDeckId().execute(deck.getId()).get();
                 result.add(quantity);
             }
         } catch (ExecutionException | InterruptedException e) {
@@ -127,20 +118,20 @@ public class MainViewModel extends AndroidViewModel {
         return result;
     }
 
-    public int getCardQuantityByDeskId(int deskId) {
+    public int getCardQuantityByDeckId(int deckId) {
         int result = 0;
         try {
-            result = new GetCardQuantityByDeskId().execute(deskId).get();
+            result = new GetCardQuantityByDeckId().execute(deckId).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    private static class GetCardQuantityByDeskId extends AsyncTask<Integer, Void, Integer> {
+    private static class GetCardQuantityByDeckId extends AsyncTask<Integer, Void, Integer> {
         @Override
         protected Integer doInBackground(Integer... integers) {
-            return database.cardDao().getCardQuantityByDeskId(integers[0]);
+            return database.cardDao().getCardQuantityByDeckId(integers[0]);
         }
     }
 
@@ -156,20 +147,20 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    public List<Card> getCardsByDeskId(int deskId) {
+    public List<Card> getCardsByDeckId(int deckId) {
         List<Card> result = null;
         try {
-            result = new GetCardsByDeskIdTask().execute(deskId).get();
+            result = new GetCardsByDeckIdTask().execute(deckId).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    private static class GetCardsByDeskIdTask extends AsyncTask<Integer, Void, List<Card>> {
+    private static class GetCardsByDeckIdTask extends AsyncTask<Integer, Void, List<Card>> {
         @Override
         protected List<Card> doInBackground(Integer... integers) {
-            return database.cardDao().getCardsByDesk(integers[0]);
+            return database.cardDao().getCardsByDeck(integers[0]);
         }
     }
 
@@ -202,14 +193,14 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    public void deleteCardsByDeskId(int id) {
-        new DeleteCardsByDeskIdTask().execute(id);
+    public void deleteCardsByDeckId(int id) {
+        new DeleteCardsByDeckIdTask().execute(id);
     }
 
-    private static class DeleteCardsByDeskIdTask extends AsyncTask<Integer, Void, Void> {
+    private static class DeleteCardsByDeckIdTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {
-            database.cardDao().deleteCardsByDeskId(integers[0]);
+            database.cardDao().deleteCardsByDeckId(integers[0]);
             return null;
         }
     }

@@ -3,40 +3,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewTitleMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Are you sure you want remove  the desk?"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewNameTebleForRemoving"
+        android:id="@+id/textViewTitleEditDesk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitleMessage" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonCancelDeskRemoving"
+    <EditText
+        android:id="@+id/editTextDeckNameForChanging"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNameTebleForRemoving" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleEditDesk" />
 
     <Button
-        android:id="@+id/buttonDeleteDeskRemoving"
+        android:id="@+id/buttonApplyChangedDeckName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNameTebleForRemoving" />
+        android:text="Rename"
+        app:layout_constraintStart_toStartOf="@+id/editTextDeckNameForChanging"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDeckNameForChanging" />
+
+    <Button
+        android:id="@+id/buttonCancleChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancle"
+        app:layout_constraintEnd_toEndOf="@+id/editTextDeckNameForChanging"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDeckNameForChanging" />
 </androidx.constraintlayout.widget.ConstraintLayout>

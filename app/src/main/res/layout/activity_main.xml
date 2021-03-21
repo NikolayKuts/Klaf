@@ -9,7 +9,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewDesks"
+        android:id="@+id/recyclerViewDecks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
@@ -28,7 +28,7 @@
         android:layout_marginEnd="55dp"
         android:layout_marginBottom="55dp"
         android:clickable="true"
-        android:onClick="onCreateDesk"
+        android:onClick="onCreateDeck"
         app:srcCompat="@drawable/ic_baseline_fingerprint_24"
         app:backgroundTint="#89A568"
         app:tint="@color/white"

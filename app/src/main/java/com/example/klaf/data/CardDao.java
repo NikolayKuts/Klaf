@@ -21,8 +21,8 @@ public interface CardDao {
     @Query("SELECT * FROM card")
     LiveData<List<Card>> getAllCards();
 
-    @Query("SELECT * FROM card WHERE idDesk = :idDeskTable")
-    List<Card> getCardsByDesk(int idDeskTable);
+    @Query("SELECT * FROM card WHERE idDeck = :idDeckTable")
+    List<Card> getCardsByDeck(int idDeckTable);
 
     @Query("SELECT * FROM card WHERE id = :cardId")
     Card getCardById(int cardId);
@@ -30,9 +30,9 @@ public interface CardDao {
     @Delete
     void deleteCard(Card card);
 
-    @Query("DELETE FROM card WHERE idDesk = :deskId")
-    void deleteCardsByDeskId(int deskId);
+    @Query("DELETE FROM card WHERE idDeck = :deckId")
+    void deleteCardsByDeckId(int deckId);
 
-    @Query("SELECT COUNT(*) FROM card WHERE idDesk = :deskId")
-    int getCardQuantityByDeskId(int deskId);
+    @Query("SELECT COUNT(*) FROM card WHERE idDeck = :deckId")
+    int getCardQuantityByDeckId(int deckId);
 }

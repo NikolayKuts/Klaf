@@ -1,8 +1,6 @@
 package com.example.klaf;
 
-import android.util.Log;
-
-import com.example.klaf.pojo.Desk;
+import com.example.klaf.pojo.Deck;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,7 +37,7 @@ public class DateWorker {
         return date.getTime();
     }
 
-    public long getScheduledDateNextRepetition(Desk desk, int currentRepetitionDuration) {
+    public long getScheduledDateNextRepetition(Deck desk, int currentRepetitionDuration) {
         long result;
         long newInterval;
         long lastInterval = desk.getScheduledDate() - desk.getLastRepetitionDate();
@@ -69,12 +67,12 @@ public class DateWorker {
         return result;
     }
 
-    public boolean getUpdatedSucceededLastRepetition(Desk desk, int currentRepetitionDuration) {
+    public boolean getUpdatedSucceededLastRepetition(Deck desk, int currentRepetitionDuration) {
         int lastRepetitionDuration = desk.getLastRepeatDuration();
         return currentRepetitionDuration + lastRepetitionDuration * DERATION_FACTOR <= lastRepetitionDuration;
     }
 
-    public int getUpdatedRepetitionDay(Desk desk) {
+    public int getUpdatedRepetitionDay(Deck desk) {
         int date = desk.getRepetitionDay();
         long difference = getCurrentDate() - desk.getCreationDate();
         int differenceInDays = (int) difference / 86_400_000;

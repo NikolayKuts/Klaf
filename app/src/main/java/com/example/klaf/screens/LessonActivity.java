@@ -29,9 +29,8 @@ import com.example.klaf.MyTimer;
 import com.example.klaf.R;
 import com.example.klaf.adapters.SoundsIpaAdapter;
 import com.example.klaf.data.OnClickAudioPlayer;
-import com.example.klaf.notifications.NotificationAssembler;
 import com.example.klaf.pojo.Card;
-import com.example.klaf.pojo.Desk;
+import com.example.klaf.pojo.Deck;
 import com.example.klaf.services.RepetitionReminder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -63,7 +62,7 @@ public class LessonActivity extends AppCompatActivity {
     private List<Card> savedProgressList = new LinkedList<>();
     private MainViewModel viewModel;
     private int deskId;
-    private Desk lessonDesk;
+    private Deck lessonDesk;
     private boolean front;
 
 
@@ -99,7 +98,7 @@ public class LessonActivity extends AppCompatActivity {
         timer = new MyTimer(textViewTimeCounter);
         cards = new LinkedList<>();
 
-        deskId = getIntent().getIntExtra(MainActivity.TAG_DESK_ID, 0);
+        deskId = getIntent().getIntExtra(MainActivity.TAG_DECK_ID, 0);
 
         soundsIpaAdapter = new SoundsIpaAdapter(soundList);
 
@@ -145,9 +144,9 @@ public class LessonActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         front = true;
-        lessonDesk = viewModel.getDeskById(deskId);
+        lessonDesk = viewModel.getDeckById(deskId);
         cards.clear();
-        cards.addAll(viewModel.getCardsByDeskId(deskId));
+        cards.addAll(viewModel.getCardsByDeckId(deskId));
         if (cards.isEmpty()) {
             savedProgressList.clear();
             startElement = null;
@@ -387,7 +386,7 @@ public class LessonActivity extends AppCompatActivity {
 
     public void onButtonAddClick(View view) {
         Intent intent = new Intent(getApplicationContext(), AddCardActivity.class);
-        intent.putExtra(MainActivity.TAG_DESK_ID, deskId);
+        intent.putExtra(MainActivity.TAG_DECK_ID, deskId);
         startActivity(intent);
     }
 
@@ -475,23 +474,23 @@ public class LessonActivity extends AppCompatActivity {
                     && badElement == null) {
 
                 timer.stopCount();
-                Desk updatedDesk = getUpdatedDesk();
-                viewModel.insertDesk(updatedDesk);
+                Deck updatedDeck = getUpdatedDesk();
+                viewModel.insertDeck(updatedDeck);
 
-                showFinishDialog(updatedDesk);
+                showFinishDialog(updatedDeck);
                 setVisibilityOnButtons(false);
-                lessonDesk = viewModel.getDeskById(deskId);
+                lessonDesk = viewModel.getDeckById(deskId);
                 cards.clear();
-                cards.addAll(viewModel.getCardsByDeskId(deskId));
+                cards.addAll(viewModel.getCardsByDeckId(deskId));
                 startElement = null;
 
                 long currentTime = System.currentTimeMillis();
-                if (updatedDesk.getScheduledDate() > currentTime
+                if (updatedDeck.getScheduledDate() > currentTime
                         && lessonDesk.getRepetitionQuantity() > 5
                         && lessonDesk.getRepetitionQuantity() % 2 == 0) {
                     ComponentName componentName = new ComponentName(getApplicationContext(), RepetitionReminder.class);
                     int serviceId = (int) currentTime;
-                    long scheduledInterval = updatedDesk.getScheduledDate() - currentTime;
+                    long scheduledInterval = updatedDeck.getScheduledDate() - currentTime;
                     PersistableBundle bundle = new PersistableBundle();
                     bundle.putString("desk_name", lessonDesk.getName());
                     JobInfo.Builder infoBuilder = new JobInfo.Builder(serviceId, componentName);
@@ -507,7 +506,7 @@ public class LessonActivity extends AppCompatActivity {
         }
     }
 
-    private void showFinishDialog(Desk updatedDesk) {
+    private void showFinishDialog(Deck updatedDesk) {
         DateWorker dateWorker = new DateWorker();
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_end_repetition);
@@ -527,7 +526,7 @@ public class LessonActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private Desk getUpdatedDesk() {
+    private Deck getUpdatedDesk() {
         DateWorker dateWorker = new DateWorker();
         long updatedLastRepetitionDate;
         int currentRepetitionDuration;
@@ -547,7 +546,7 @@ public class LessonActivity extends AppCompatActivity {
         boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
 
         //        viewModel.insertDesk(updatedDesk);
-        return new Desk(
+        return new Deck(
                 deskId,
                 lessonDesk.getName(),
                 lessonDesk.getCreationDate(),

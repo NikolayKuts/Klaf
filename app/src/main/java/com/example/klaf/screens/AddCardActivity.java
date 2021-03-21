@@ -18,7 +18,7 @@ import com.example.klaf.IpaProcesser;
 import com.example.klaf.R;
 import com.example.klaf.adapters.LettersBarAdapter;
 import com.example.klaf.pojo.Card;
-import com.example.klaf.pojo.Desk;
+import com.example.klaf.pojo.Deck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,12 @@ public class AddCardActivity extends AppCompatActivity {
         textViewDeskQuantity = findViewById(R.id.textViewCardQuantity);
         recyclerViewLettersBar = findViewById(R.id.recyclerViewLettersBar);
 
-        deskId = getIntent().getIntExtra(MainActivity.TAG_DESK_ID, -1);
+        deskId = getIntent().getIntExtra(MainActivity.TAG_DECK_ID, -1);
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.getCards().observe(this, new Observer<List<Card>>() {
             @Override
             public void onChanged(List<Card> cards) {
-                int quantity = viewModel.getCardQuantityByDeskId(deskId);
+                int quantity = viewModel.getCardQuantityByDeckId(deskId);
                 textViewDeskQuantity.setText(String.format(Locale.getDefault(), "%d", quantity));
             }
         });
@@ -72,7 +72,7 @@ public class AddCardActivity extends AppCompatActivity {
         });
 
         editTextForeignWord.addTextChangedListener(new TextChangeWatcher(checkedLetterHolders, lettersBarAdapter, editTextIpa));
-        Desk desk = viewModel.getDeskById(deskId);
+        Deck desk = viewModel.getDeckById(deskId);
         textViewDeskName.setText(desk.getName());
 
     }

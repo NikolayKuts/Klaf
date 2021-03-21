@@ -5,11 +5,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -21,8 +17,6 @@ import com.example.klaf.R;
 import com.example.klaf.adapters.LettersBarAdapter;
 import com.example.klaf.pojo.Card;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EditCardActivity extends AppCompatActivity {
@@ -97,7 +91,7 @@ public class EditCardActivity extends AppCompatActivity {
     private Card getCard() {
         Card changedCard = null;
         IpaProcesser ipaProcesser = new IpaProcesser();
-        int idDesk = card.getIdDesk();
+        int idDesk = card.getIdDeck();
         String nativeWord = editTextNativeWord.getText().toString().trim();
         String foreignWord = editTextForeignWord.getText().toString().trim();
         String ipaTemplate = editTextIpa.getText().toString().trim();

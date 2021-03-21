@@ -1,7 +1,6 @@
 package com.example.klaf.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,24 +27,22 @@ import android.widget.Toast;
 
 import com.example.klaf.DateWorker;
 import com.example.klaf.R;
-import com.example.klaf.adapters.DeskAdapter;
-import com.example.klaf.pojo.Card;
-import com.example.klaf.pojo.Desk;
+import com.example.klaf.adapters.DeckAdapter;
+import com.example.klaf.pojo.Deck;
 import com.example.klaf.services.RepetitionDayUpdater;
 import com.example.klaf.services.RepetitionReminder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG_DESK_ID = "desk_id";
+    public static final String TAG_DECK_ID = "deck_id";
 
     private static boolean firstStart = true;
     private MainViewModel viewModel;
-    private List<Desk> desks;
-    private List<Integer> cardQuantityInDesk;
-    private DeskAdapter adapter;
+    private List<Deck> decks;
+    private List<Integer> cardQuantityInDeck;
+    private DeckAdapter adapter;
     private RecyclerView recyclerView;
 
     @Override
@@ -53,28 +50,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.recyclerViewDesks);
-        desks = new ArrayList<>();
-        cardQuantityInDesk = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerViewDecks);
+        decks = new ArrayList<>();
+        cardQuantityInDeck = new ArrayList<>();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        adapter = new DeskAdapter(desks, cardQuantityInDesk);
-        adapter.setOnDeskClickListener(new DeskAdapter.OnDeskClickListener() {
+        adapter = new DeckAdapter(decks, cardQuantityInDeck);
+        adapter.setOnDeckClickListener(new DeckAdapter.OnDeckClickListener() {
             @Override
-            public void onDeskClick(int position) {
+            public void onDeckClick(int position) {
                 Intent intent = new Intent(MainActivity.this, LessonActivity.class);
-                intent.putExtra(TAG_DESK_ID, desks.get(position).getId());
+                intent.putExtra(TAG_DECK_ID, decks.get(position).getId());
                 startActivity(intent);
             }
         });
-        adapter.setOnDeskLongClickListener(new DeskAdapter.OnDeskLongClickListener() {
+        adapter.setOnDeckLongClickListener(new DeckAdapter.OnDeckLongClickListener() {
             @Override
             public void onDeckLongClick(int position) {
-                Desk desk = desks.get(position);
-                showGeneralDialog(desk);
+                Deck deck = decks.get(position);
+                showGeneralDialog(deck);
             }
         });
 
@@ -91,14 +88,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        desks.clear();
-        desks.addAll(viewModel.getDeskList());
-        cardQuantityInDesk.clear();
-        cardQuantityInDesk.addAll(viewModel.getCardQuantityList());
+        decks.clear();
+        decks.addAll(viewModel.getDeckList());
+        cardQuantityInDeck.clear();
+        cardQuantityInDeck.addAll(viewModel.getCardQuantityList());
         adapter.notifyDataSetChanged();
         updateRepetitionDate();
         runRepetitionDayUpdater(firstStart);
         runRepetitionReminder(firstStart);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
 
         showInfoForChecking();
     }
@@ -117,15 +117,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void runRepetitionReminder(boolean firstStart) {
         if (firstStart) {
-            for (Desk desk : desks) {
+            for (Deck deck : decks) {
                 long currentTime = System.currentTimeMillis();
 
-                if (desk.getScheduledDate() > currentTime) {
+                if (deck.getScheduledDate() > currentTime) {
                     ComponentName componentName = new ComponentName(getApplicationContext(), RepetitionReminder.class);
                     int serviceId = (int) currentTime;
-                    long scheduledInterval = desk.getScheduledDate() - currentTime;
+                    long scheduledInterval = deck.getScheduledDate() - currentTime;
                     PersistableBundle bundle = new PersistableBundle();
-                    bundle.putString("desk_name", desk.getName());
+                    bundle.putString("deck_name", deck.getName());
 
                     JobInfo.Builder infoBuilder = new JobInfo.Builder(serviceId, componentName);
                     infoBuilder.setMinimumLatency(scheduledInterval)
@@ -141,90 +141,90 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateRepetitionDate() {
-        for (Desk desk : desks) {
-            long daysInMilliseconds = System.currentTimeMillis() - desk.getCreationDate();
+        for (Deck deck : decks) {
+            long daysInMilliseconds = System.currentTimeMillis() - deck.getCreationDate();
             double days = (double) daysInMilliseconds / 86_400_000;
-            Log.i("log", "Desk: ");
+            Log.i("log", "Deck: ");
             Log.i("log", "days  " + days);
-            if (desk.getRepetitionDay() < days) {
-                desk.setRepetitionDay((int) days + 1);
+            if (deck.getRepetitionDay() < days) {
+                deck.setRepetitionDay((int) days + 1);
             }
         }
-        viewModel.insertDeskList(desks);
+        viewModel.insertDeckList(decks);
     }
 
 
-    public void onCreateDesk(View view) {
+    public void onCreateDeck(View view) {
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_anim);
         view.startAnimation(animation);
         Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_add_desk);
-        EditText editText = dialog.findViewById(R.id.editTextDeskName);
+        dialog.setContentView(R.layout.dialog_add_deck);
+        EditText editText = dialog.findViewById(R.id.editTextDeckName);
         Button buttonConfirm = dialog.findViewById(R.id.buttonConfirm);
         Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
         dialog.show();
 
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
         buttonConfirm.setOnClickListener(v -> {
-            String deskName = editText.getText().toString().trim();
+            String deckName = editText.getText().toString().trim();
 
-            if (deskName.isEmpty()) {
-                Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT).show();
+            if (deckName.isEmpty()) {
+                Toast.makeText(MainActivity.this, "The field \"deck name\" can't be empty", Toast.LENGTH_SHORT).show();
             } else {
                 DateWorker dateWorker = new DateWorker();
                 long currentTime = dateWorker.getCurrentDate();
-                Desk newDesk = new Desk(deskName, currentTime);
-                viewModel.insertDesk(newDesk);
+                Deck newDeck = new Deck(deckName, currentTime);
+                viewModel.insertDeck(newDeck);
                 onResume();
                 dialog.dismiss();
             }
         });
     }
 
-    private void showDeletingDeskDialog(Desk desk) {
+    private void showDeletingDeckDialog(Deck deck) {
         Dialog dialog = new Dialog(MainActivity.this);
-        dialog.setContentView(R.layout.dialog_remove_desk);
+        dialog.setContentView(R.layout.dialog_remove_deck);
 
-        TextView textViewDeskName = dialog.findViewById(R.id.textViewNameTebleForRemoving);
-        Button buttonDelete = dialog.findViewById(R.id.buttonDeleteDeskRemoving);
-        Button buttonCancel = dialog.findViewById(R.id.buttonCancelDeskRemoving);
+        TextView textViewDeckName = dialog.findViewById(R.id.textViewNameTebleForRemoving);
+        Button buttonDelete = dialog.findViewById(R.id.buttonDeleteDeckRemoving);
+        Button buttonCancel = dialog.findViewById(R.id.buttonCancelDeckRemoving);
 
         buttonDelete.setOnClickListener(v -> {
-            viewModel.deleteCardsByDeskId(desk.getId());
-            viewModel.removeDesk(desk);
+            viewModel.deleteCardsByDeckId(deck.getId());
+            viewModel.removeDeck(deck);
             dialog.dismiss();
         });
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
-        textViewDeskName.setText(desk.getName());
+        textViewDeckName.setText(deck.getName());
         dialog.show();
     }
 
-    private void showEditingDeskDialog(Desk desk) {
+    private void showEditingDeckDialog(Deck deck) {
         Dialog dialog = new Dialog(MainActivity.this);
-        dialog.setContentView(R.layout.dialog_edit_desk);
+        dialog.setContentView(R.layout.dialog_edit_deck);
 
-        EditText editTextDeskName = dialog.findViewById(R.id.editTextDeskNameForChanging);
+        EditText editTextDeckName = dialog.findViewById(R.id.editTextDeckNameForChanging);
         Button buttonCancelChanges = dialog.findViewById(R.id.buttonCancleChanges);
-        Button buttonApplyChangedDeskName = dialog.findViewById(R.id.buttonApplyChangedDeskName);
+        Button buttonApplyChangedDeckName = dialog.findViewById(R.id.buttonApplyChangedDeckName);
 
-        editTextDeskName.setText(desk.getName());
+        editTextDeckName.setText(deck.getName());
 
         dialog.show();
 
         buttonCancelChanges.setOnClickListener(v -> dialog.dismiss());
 
-        buttonApplyChangedDeskName.setOnClickListener(v -> {
-            String deskName = editTextDeskName.getText().toString();
+        buttonApplyChangedDeckName.setOnClickListener(v -> {
+            String deckName = editTextDeckName.getText().toString();
             Toast toast;
 
-            if (deskName.isEmpty()) {
-                toast = Toast.makeText(MainActivity.this, "The field \"desk name\" can't be empty", Toast.LENGTH_SHORT);
+            if (deckName.isEmpty()) {
+                toast = Toast.makeText(MainActivity.this, "The field \"deck name\" can't be empty", Toast.LENGTH_SHORT);
             } else {
-                if (desk.getName().equals(deskName)) {
+                if (deck.getName().equals(deckName)) {
                     toast = Toast.makeText(MainActivity.this, "You haven't changed the name", Toast.LENGTH_SHORT);
                 } else {
-                    desk.setName(deskName);
-                    viewModel.insertDesk(desk);
+                    deck.setName(deckName);
+                    viewModel.insertDeck(deck);
                     dialog.dismiss();
                     toast = Toast.makeText(MainActivity.this, "The name has been changed", Toast.LENGTH_SHORT);
                 }
@@ -235,54 +235,53 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showGeneralDialog(Desk desk) {
+    private void showGeneralDialog(Deck deck) {
         Dialog dialog = new Dialog(MainActivity.this);
-        dialog.setContentView(R.layout.dialog_general_on_desk);
+        dialog.setContentView(R.layout.dialog_general_on_deck);
 
         TextView textViewTitle = dialog.findViewById(R.id.textViewTitleGeneral);
-        Button buttonCallEditingDialog = dialog.findViewById(R.id.buttonCallEditingDeskDialog);
-        Button buttonCallDeletingDialog = dialog.findViewById(R.id.buttonCallDeletingDeskDialog);
+        Button buttonCallEditingDialog = dialog.findViewById(R.id.buttonCallEditingDeckDialog);
+        Button buttonCallDeletingDialog = dialog.findViewById(R.id.buttonCallDeletingDeckDialog);
         Button buttonShowCardsViewer = dialog.findViewById(R.id.buttonShowCardsViewer);
         Button buttonToAddCardActivity = dialog.findViewById(R.id.buttonToAddCardActivity);
 
-        textViewTitle.setText(desk.getName());
+        textViewTitle.setText(deck.getName());
         dialog.show();
 
         buttonCallDeletingDialog.setOnClickListener(v -> {
-            showDeletingDeskDialog(desk);
+            showDeletingDeckDialog(deck);
             dialog.dismiss();
         });
         buttonCallEditingDialog.setOnClickListener(v -> {
-            showEditingDeskDialog(desk);
+            showEditingDeckDialog(deck);
             dialog.dismiss();
         });
         buttonShowCardsViewer.setOnClickListener(v -> {
-            if (viewModel.getCardsByDeskId(desk.getId()).isEmpty()) {
-                Toast.makeText(MainActivity.this, "The desk is empty", Toast.LENGTH_SHORT).show();
+            if (viewModel.getCardsByDeckId(deck.getId()).isEmpty()) {
+                Toast.makeText(MainActivity.this, "The deck is empty", Toast.LENGTH_SHORT).show();
             } else {
                 Intent intent = new Intent(MainActivity.this, CardViewerActivity.class);
-                intent.putExtra(TAG_DESK_ID, desk.getId());
+                intent.putExtra(TAG_DECK_ID, deck.getId());
                 startActivity(intent);
                 dialog.dismiss();
             }
         });
         buttonToAddCardActivity.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
-            intent.putExtra(TAG_DESK_ID, desk.getId());
+            intent.putExtra(TAG_DECK_ID, deck.getId());
             startActivity(intent);
             dialog.dismiss();
         });
     }
 
     private void showInfoForChecking() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
         JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+//        scheduler.cancelAll();
         List<JobInfo> jobInfos = scheduler.getAllPendingJobs();
-        Log.i("logi", "onResume: " + jobInfos.size());
+        Log.i("log", "onResume: " + jobInfos.size());
         int i = 0;
         for (JobInfo jobinfo : jobInfos) {
-            Log.i("logi", "onResume: " + i++ + jobinfo.getId());
+            Log.i("log", "onResume: " + i++ + jobinfo.getId());
         }
     }
 

@@ -15,10 +15,10 @@
     <color name="word_front">#CFD685</color>
     <color name="word_back">#81B7BD</color>
 
-    <color name="item_desk_background_dark">#6A656565</color>
+    <color name="item_deck_background_dark">#6A656565</color>
     <color name="scheduled_date">#CD933D</color>
     <color name="scheduled_date_delay">#DC7971</color>
-    <color name="item_desk_name_green">#9DC174</color>
-    <color name="item_desk_name_grey">#B3B3B3</color>
+    <color name="item_deck_name_green">#9DC174</color>
+    <color name="item_deck_name_grey">#B3B3B3</color>
     <color name="green_button">#839371</color>
 </resources>

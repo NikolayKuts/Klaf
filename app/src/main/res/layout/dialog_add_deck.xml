@@ -7,38 +7,38 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewTitleEditDesk"
+        android:id="@+id/textViewTitleCreateNewDesk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Craate new deck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextDeskNameForChanging"
+        android:id="@+id/editTextDeckName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:ems="12"
+        android:inputType="textMultiLine"
+        android:hint="deck name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitleEditDesk" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleCreateNewDesk" />
 
     <Button
-        android:id="@+id/buttonApplyChangedDeskName"
+        android:id="@+id/buttonConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rename"
-        app:layout_constraintStart_toStartOf="@+id/editTextDeskNameForChanging"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDeskNameForChanging" />
+        android:text="Create"
+        app:layout_constraintEnd_toEndOf="@+id/editTextDeckName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDeckName" />
 
     <Button
-        android:id="@+id/buttonCancleChanges"
+        android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancle"
-        app:layout_constraintEnd_toEndOf="@+id/editTextDeskNameForChanging"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDeskNameForChanging" />
+        android:text="Cancel"
+        app:layout_constraintStart_toStartOf="@+id/editTextDeckName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDeckName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

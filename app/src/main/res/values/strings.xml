@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Klaf</string>
-    <string name="the_desk_is_empty">the desk is empty</string>
+    <string name="the_desk_is_empty">the deck is empty</string>
     <string name="button_turn">Turn</string>
     <string name="button_easy">Easy</string>
     <string name="button_good">Good</string>
     <string name="button_bad">Bad</string>
     <string name="timer_zero">00:0</string>
-    <string name="title_desk">desk:</string>
+    <string name="title_desk">deck:</string>
     <string name="button_start">Start</string>
     <string name="native_word">N</string>
     <string name="arrow"><![CDATA[->]]></string>
