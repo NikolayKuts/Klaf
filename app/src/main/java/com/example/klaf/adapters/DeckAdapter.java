@@ -114,10 +114,10 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.Holder> {
 
         private void setColorOnNameAndBackground(int position) {
             if (position % 2 == 0) {
-                constraintLayout.setBackgroundColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_deck_background_dark));
+                constraintLayout.setBackground(ContextCompat.getDrawable(constraintLayout.getContext(), R.drawable.deck_item_background_1));
                 textViewDeckName.setTextColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_deck_name_green));
             } else {
-                constraintLayout.setBackgroundColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.transparent));
+                constraintLayout.setBackgroundResource(R.drawable.deck_item_background_2);
                 textViewDeckName.setTextColor(ContextCompat.getColor(constraintLayout.getContext(), R.color.item_deck_name_grey));
             }
         }
