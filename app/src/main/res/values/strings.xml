@@ -15,4 +15,8 @@
     <string name="description_button_add_card">button add card</string>
     <string name="description_button_edit_card">button edit card</string>
     <string name="description_button_delete_card">button delete card</string>
+    <string name="dialog_button_delete_deck">Delete deck</string>
+    <string name="dialog_button_rename_deck">Rename deck</string>
+    <string name="dialog_button_show_cards">Show cards</string>
+    <string name="dialog_button_add_cards">Add cards</string>
 </resources>

@@ -4,49 +4,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="300dp">
+    android:layout_height="300dp"
+    tools:background="@color/app_background" >
 
     <TextView
         android:id="@+id/textViewTitleGeneral"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+        style="@style/dialog_title"
+        tools:text="Desk name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonCallDeletingDeckDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Delete deck"
+        style="@style/dialog_button"
+        android:text="@string/dialog_button_delete_deck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleGeneral" />
 
     <Button
         android:id="@+id/buttonCallEditingDeckDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit deck name"
+        style="@style/dialog_button"
+        android:text="@string/dialog_button_rename_deck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonCallDeletingDeckDialog" />
 
     <Button
         android:id="@+id/buttonShowCardsViewer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Show cards"
+        style="@style/dialog_button"
+        android:text="@string/dialog_button_show_cards"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonCallEditingDeckDialog" />
 
     <Button
         android:id="@+id/buttonToAddCardActivity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Add cards"
+        style="@style/dialog_button"
+        android:text="@string/dialog_button_add_cards"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonShowCardsViewer" />

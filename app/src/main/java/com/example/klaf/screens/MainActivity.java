@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
             viewModel.deleteCardsByDeckId(deck.getId());
             viewModel.removeDeck(deck);
             dialog.dismiss();
+            onResume();
         });
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
         textViewDeckName.setText(deck.getName());
@@ -238,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
     private void showGeneralDialog(Deck deck) {
         Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.dialog_general_on_deck);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         TextView textViewTitle = dialog.findViewById(R.id.textViewTitleGeneral);
         Button buttonCallEditingDialog = dialog.findViewById(R.id.buttonCallEditingDeckDialog);
