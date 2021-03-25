@@ -20,7 +20,7 @@ import java.util.Locale;
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.Holder> {
     private List<Deck> decks;
     private List<Integer> cardQuantityList;
-//    private MainViewModel viewModel;
+    //    private MainViewModel viewModel;
     private OnDeckClickListener onDeckClickListener;
     private OnDeckLongClickListener onDeckLongClickListener;
 
@@ -54,22 +54,22 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        Deck deck = decks.get(position);
-        DateWorker dateWorker = new DateWorker();
+            Deck deck = decks.get(position);
+            DateWorker dateWorker = new DateWorker();
 
-        int size = cardQuantityList.get(position);
-        String scheduledDate = dateWorker.getFormattedDate(deck.getScheduledDate());
-        holder.textViewDeckName.setText(deck.getName());
-        holder.textViewScheduledDate.setText(scheduledDate);
-        if (dateWorker.getCurrentDate() > deck.getScheduledDate()) {
-            holder.textViewScheduledDate.setTextColor(ContextCompat.getColor(holder.textViewScheduledDate.getContext(), R.color.scheduled_date_delay));
-        } else {
-            holder.textViewScheduledDate.setTextColor(ContextCompat.getColor(holder.textViewScheduledDate.getContext(), R.color.scheduled_date));
-        }
-        holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
-        holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d", deck.getRepetitionDay()));
-        holder.textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", deck.getRepetitionQuantity()));
-        holder.setColorOnNameAndBackground(position);
+            int size = cardQuantityList.get(position);
+            String scheduledDate = dateWorker.getFormattedDate(deck.getScheduledDate());
+            holder.textViewDeckName.setText(deck.getName());
+            holder.textViewScheduledDate.setText(scheduledDate);
+            if (dateWorker.getCurrentDate() > deck.getScheduledDate()) {
+                holder.textViewScheduledDate.setTextColor(ContextCompat.getColor(holder.textViewScheduledDate.getContext(), R.color.scheduled_date_delay));
+            } else {
+                holder.textViewScheduledDate.setTextColor(ContextCompat.getColor(holder.textViewScheduledDate.getContext(), R.color.scheduled_date));
+            }
+            holder.textViewCardsQuantity.setText(String.format(Locale.getDefault(), "%d", size));
+            holder.textViewRepetitionDay.setText(String.format(Locale.getDefault(), "%d", deck.getRepetitionDay()));
+            holder.textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", deck.getRepetitionQuantity()));
+            holder.setColorOnNameAndBackground(position);
     }
 
     @Override
