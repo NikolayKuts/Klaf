@@ -1,10 +1,14 @@
 package com.example.klaf.screens;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.job.JobInfo;
@@ -15,6 +19,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -31,6 +36,7 @@ import com.example.klaf.adapters.DeckAdapter;
 import com.example.klaf.pojo.Deck;
 import com.example.klaf.services.RepetitionDayUpdater;
 import com.example.klaf.services.RepetitionReminder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Integer> cardQuantityInDeck;
     private DeckAdapter adapter;
     private RecyclerView recyclerView;
+    private FloatingActionButton deckCreationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerViewDecks);
+        deckCreationButton = findViewById(R.id.deckCreationButton);
         decks = new ArrayList<>();
         cardQuantityInDeck = new ArrayList<>();
 
@@ -59,19 +67,40 @@ public class MainActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         adapter = new DeckAdapter(decks, cardQuantityInDeck);
-        adapter.setOnDeckClickListener(new DeckAdapter.OnDeckClickListener() {
+
+        adapter.setOnDeckClickListener(position -> {
+            Intent intent = new Intent(MainActivity.this, LessonActivity.class);
+            intent.putExtra(TAG_DECK_ID, decks.get(position).getId());
+            startActivity(intent);
+        });
+
+        adapter.setOnDeckLongClickListener(position -> {
+            Deck deck = decks.get(position);
+            showGeneralDialog(deck);
+        });
+
+        adapter.setOnBottomReachedListener(() -> {
+                DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+                float heightPixels = displaymetrics.heightPixels;
+                ObjectAnimator animator = ObjectAnimator.ofFloat(deckCreationButton, View.TRANSLATION_Y, -(heightPixels - heightPixels / 4));
+                animator.setDuration(500);
+                animator.start();
+        });
+
+        adapter.setOnTopReachedListener(new DeckAdapter.OnTopReachedListener() {
             @Override
-            public void onDeckClick(int position) {
-                Intent intent = new Intent(MainActivity.this, LessonActivity.class);
-                intent.putExtra(TAG_DECK_ID, decks.get(position).getId());
-                startActivity(intent);
+            public void onTopReached() {
+                ObjectAnimator animator = ObjectAnimator.ofFloat(deckCreationButton, View.TRANSLATION_Y, 0);
+                animator.setDuration(500);
+                animator.start();
             }
         });
-        adapter.setOnDeckLongClickListener(new DeckAdapter.OnDeckLongClickListener() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onDeckLongClick(int position) {
-                Deck deck = decks.get(position);
-                showGeneralDialog(deck);
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                adapter.setScrolled(true);
             }
         });
 
@@ -96,10 +125,6 @@ public class MainActivity extends AppCompatActivity {
         updateRepetitionDate();
         runRepetitionDayUpdater(firstStart);
         runRepetitionReminder(firstStart);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
-
         showInfoForChecking();
     }
 
@@ -153,10 +178,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.insertDeckList(decks);
     }
 
-
     public void onCreateDeck(View view) {
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.click_anim);
-        view.startAnimation(animation);
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_add_deck);
         EditText editText = dialog.findViewById(R.id.editTextDeckName);

@@ -93,7 +93,7 @@ public class LessonActivity extends AppCompatActivity {
         main = findViewById(R.id.floatingActionButtonMain);
         button1 = findViewById(R.id.floatingActionButtonAddCard);
         button2 = findViewById(R.id.floatingActionButtonEditCard);
-        button3 = findViewById(R.id.floatingActionButton3);
+        button3 = findViewById(R.id.deckCreationButton);
 
         timer = new MyTimer(textViewTimeCounter);
         cards = new LinkedList<>();

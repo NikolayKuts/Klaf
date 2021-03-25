@@ -1,5 +1,6 @@
 package com.example.klaf.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,22 @@ import com.example.klaf.pojo.Deck;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.internal.operators.observable.ObservableNever;
+
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.Holder> {
     private List<Deck> decks;
     private List<Integer> cardQuantityList;
     //    private MainViewModel viewModel;
     private OnDeckClickListener onDeckClickListener;
     private OnDeckLongClickListener onDeckLongClickListener;
+    private OnBottomReachedListener onBottomREachedListener;
+    private OnTopReachedListener onTopReachedListener;
+    private boolean scrolled;
 
     public DeckAdapter(List<Deck> decks, List<Integer> cardQuantityList) {
         this.decks = decks;
         this.cardQuantityList = cardQuantityList;
+        scrolled = false;
     }
 
     public interface OnDeckClickListener {
@@ -37,12 +44,32 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.Holder> {
         void onDeckLongClick(int position);
     }
 
+    public interface OnBottomReachedListener {
+        void onBottomReached();
+    }
+
+    public interface OnTopReachedListener {
+        void onTopReached();
+    }
+
     public void setOnDeckClickListener(OnDeckClickListener onDeckClickListener) {
         this.onDeckClickListener = onDeckClickListener;
     }
 
     public void setOnDeckLongClickListener(OnDeckLongClickListener onDeckLongClickListener) {
         this.onDeckLongClickListener = onDeckLongClickListener;
+    }
+
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomREachedListener) {
+        this.onBottomREachedListener = onBottomREachedListener;
+    }
+
+    public void setOnTopReachedListener(OnTopReachedListener onTopReachedListener) {
+        this.onTopReachedListener = onTopReachedListener;
+    }
+
+    public void setScrolled(boolean scrolled) {
+        this.scrolled = scrolled;
     }
 
     @NonNull
@@ -54,6 +81,13 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
+        if (position == decks.size() - 1 && scrolled) {
+            onBottomREachedListener.onBottomReached();
+        }
+        if (position == 0) {
+            onTopReachedListener.onTopReached();
+            scrolled = false;
+        }
             Deck deck = decks.get(position);
             DateWorker dateWorker = new DateWorker();
 
