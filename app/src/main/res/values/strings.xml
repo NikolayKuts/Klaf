@@ -19,4 +19,12 @@
     <string name="dialog_button_rename_deck">Rename deck</string>
     <string name="dialog_button_show_cards">Show cards</string>
     <string name="dialog_button_add_cards">Add cards</string>
+    <string name="end_repetition">End repetition</string>
+    <string name="last_duration">Last duration:</string>
+    <string name="current_duration">Current duration:</string>
+    <string name="new_scheduled_date">New scheduled date:</string>
+    <string name="last_scheduled_date">Last scheduled date:</string>
+    <string name="last_repetition_date">Last repetition date:</string>
+    <string name="repetition_quantity">Repetition quantity:</string>
+    <string name="success_mark">Last success mark:</string>
 </resources>

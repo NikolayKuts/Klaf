@@ -4,13 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300sp"
-    android:layout_height="300dp">
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:background="@drawable/background_dialog_end_repetition">
 
     <TextView
         android:id="@+id/textViewTitleDialogEndRepetition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="End repetition"
+        android:text="@string/end_repetition"
+        android:textColor="#C2D7E1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,7 +22,9 @@
         android:id="@+id/textViewTitleLastDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Last duration:"
+        android:layout_marginTop="10dp"
+        android:text="@string/last_duration"
+        android:textColor="#73B0CC"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleDialogEndRepetition" />
 
@@ -27,7 +32,8 @@
         android:id="@+id/textViewTitleCurrentDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current duration:"
+        android:text="@string/current_duration"
+        android:textColor="#73B0CC"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleLastDuration" />
 
@@ -35,7 +41,8 @@
         android:id="@+id/textViewValueLastDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        tools:text="TextView"
+        android:textColor="#DAB851"
         app:layout_constraintBottom_toBottomOf="@+id/textViewTitleLastDuration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewTitleLastDuration" />
@@ -44,7 +51,8 @@
         android:id="@+id/textViewValueCurrentDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        tools:text="TextView"
+        android:textColor="@color/item_deck_name_green"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewValueLastDuration" />
 
@@ -52,23 +60,27 @@
         android:id="@+id/textViewTitleScheduledDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New scheduled date:"
+        android:layout_marginTop="5dp"
+        android:text="@string/new_scheduled_date"
+        android:textColor="#A1B885"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleCurrentDuration" />
 
     <TextView
-        android:id="@+id/textViewValueScheduldDate"
+        android:id="@+id/textViewValueScheduledDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:textColor="#C8C8C8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewValueCurrentDuration" />
+        app:layout_constraintTop_toTopOf="@+id/textViewTitleScheduledDate"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/textViewTitleLastScheduledDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Last schedeled date:"
+        android:text="@string/last_scheduled_date"
+        android:textColor="#A1B885"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleScheduledDate" />
 
@@ -76,23 +88,63 @@
         android:id="@+id/textViewValueLastScheduledDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:textColor="#838383"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewValueScheduldDate" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewValueScheduledDate"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/textViewTitleLastRepetitionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Last repetition date:"
+        android:layout_marginTop="5dp"
+        android:text="@string/last_repetition_date"
+        android:textColor="#C1A376"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleLastScheduledDate" />
 
     <TextView
-        android:id="@+id/textViewValueLastRepetitonDate"
+        android:id="@+id/textViewValueLastRepetitionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:textColor="#C1A376"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewValueLastScheduledDate" />
+        app:layout_constraintTop_toTopOf="@+id/textViewTitleLastRepetitionDate"
+        tools:text="TextView" />
+
+    <TextView
+        android:id="@+id/textViewRepetitionQuantiy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/repetition_quantity"
+        android:textColor="#8CAFBF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleLastRepetitionDate" />
+
+    <TextView
+        android:id="@+id/textViewSuccessMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/success_mark"
+        android:textColor="#DCA695"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRepetitionQuantiy" />
+
+    <TextView
+        android:id="@+id/textViewValueRepetitionQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="TextView"
+        android:textColor="#8CAFBF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewValueLastRepetitionDate" />
+
+    <TextView
+        android:id="@+id/textViewValueSuccessMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="TextView"
+        android:textColor="#DCA695"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewValueRepetitionQuantity" />
 </androidx.constraintlayout.widget.ConstraintLayout>

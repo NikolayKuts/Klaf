@@ -2,6 +2,7 @@ package com.example.klaf.screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         runRepetitionDayUpdater(firstStart);
         runRepetitionReminder(firstStart);
         showInfoForChecking();
+        NotificationManagerCompat.from(this).cancelAll();
     }
 
     private void runRepetitionDayUpdater(boolean firstStart) {
@@ -301,10 +303,10 @@ public class MainActivity extends AppCompatActivity {
     private void showInfoForChecking() {
         JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
 //        scheduler.cancelAll();
-        List<JobInfo> jobInfos = scheduler.getAllPendingJobs();
-        Log.i("log", "onResume: " + jobInfos.size());
+        List<JobInfo> jobInfo = scheduler.getAllPendingJobs();
+        Log.i("log", "onResume: " + jobInfo.size());
         int i = 0;
-        for (JobInfo jobinfo : jobInfos) {
+        for (JobInfo jobinfo : jobInfo) {
             Log.i("log", "onResume: " + i++ + jobinfo.getId());
         }
     }

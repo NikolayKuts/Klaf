@@ -37,6 +37,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class LessonActivity extends AppCompatActivity {
     private static final int EASE_LEVEL_EASY = 0;
@@ -510,19 +511,29 @@ public class LessonActivity extends AppCompatActivity {
         DateWorker dateWorker = new DateWorker();
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_end_repetition);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        int currentDuration = timer.getSavedTotalSeconds();
 
         TextView textViewCurrentDuration = dialog.findViewById(R.id.textViewValueCurrentDuration);
         TextView textViewLastDuration = dialog.findViewById(R.id.textViewValueLastDuration);
-        TextView textViewNewScheduledDate = dialog.findViewById(R.id.textViewValueScheduldDate);
+        TextView textViewNewScheduledDate = dialog.findViewById(R.id.textViewValueScheduledDate);
         TextView textViewLastScheduledDate = dialog.findViewById(R.id.textViewValueLastScheduledDate);
-        TextView textViewValueLastRepetitionDate = dialog.findViewById(R.id.textViewValueLastRepetitonDate);
+        TextView textViewLastRepetitionDate = dialog.findViewById(R.id.textViewValueLastRepetitionDate);
+        TextView textViewRepetitionQuantity = dialog.findViewById(R.id.textViewValueRepetitionQuantity);
+        TextView textViewSuccessMark = dialog.findViewById(R.id.textViewValueSuccessMark);
 
         textViewLastDuration.setText(timer.getTimeAsString(lessonDesk.getLastRepeatDuration()));
-        textViewCurrentDuration.setText(timer.getTimeAsString(timer.getSavedTotalSeconds()));
+        textViewCurrentDuration.setText(timer.getTimeAsString(currentDuration));
+
         textViewNewScheduledDate.setText(dateWorker.getFormattedDate(updatedDesk.getScheduledDate()));
         textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
-        textViewValueLastRepetitionDate.setText(dateWorker.getFormattedDate(updatedDesk.getLastRepetitionDate()));
-        Log.i("log", "showFinishDialog: lessonDesk" + dateWorker.getFormattedDate(lessonDesk.getLastRepetitionDate()));
+        textViewLastRepetitionDate.setText(dateWorker.getFormattedDate(updatedDesk.getLastRepetitionDate()));
+        textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", updatedDesk.getRepetitionQuantity()));
+        textViewSuccessMark.setText(lessonDesk.isSucceededLastRepetition() ? "succeed" : "failed");
+
+        if (!dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentDuration)) {
+            textViewCurrentDuration.setTextColor(ContextCompat.getColor(this, R.color.red));
+        }
         dialog.show();
     }
 
@@ -530,28 +541,28 @@ public class LessonActivity extends AppCompatActivity {
         DateWorker dateWorker = new DateWorker();
         long updatedLastRepetitionDate;
         int currentRepetitionDuration;
+        boolean updatedSucceededLastRepetition;
+
         if (lessonDesk.getRepetitionQuantity() % 2 != 0) {
             updatedLastRepetitionDate = dateWorker.getCurrentDate();
             currentRepetitionDuration = timer.getSavedTotalSeconds();
+            updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
         } else {
             updatedLastRepetitionDate = lessonDesk.getLastRepetitionDate();
             currentRepetitionDuration = lessonDesk.getLastRepeatDuration();
+            updatedSucceededLastRepetition = lessonDesk.isSucceededLastRepetition();
         }
 
-//        int currentRepetitionDuration = timer.getSavedTotalSeconds();
         long newScheduledDate = dateWorker.getScheduledDateNextRepetition(lessonDesk, currentRepetitionDuration);
-        Log.i("logg", "getUpdatedDesk: " + dateWorker.getFormattedDate(newScheduledDate));
         int updatedRepetitionDay = dateWorker.getUpdatedRepetitionDay(lessonDesk); // method getUpdated
         int updatedRepetitionQuantity = lessonDesk.getRepetitionQuantity() + 1;
-        boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
+//        boolean updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
 
-        //        viewModel.insertDesk(updatedDesk);
         return new Deck(
                 deskId,
                 lessonDesk.getName(),
                 lessonDesk.getCreationDate(),
                 updatedLastRepetitionDate,
-
                 newScheduledDate,
                 currentRepetitionDuration,
                 updatedRepetitionDay,
