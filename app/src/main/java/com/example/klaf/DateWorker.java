@@ -67,9 +67,9 @@ public class DateWorker {
         return result;
     }
 
-    public boolean getUpdatedSucceededLastRepetition(Deck desk, int currentRepetitionDuration) {
+    public boolean isRepetitionSucceeded(Deck desk, int currentRepetitionDuration) {
         int lastRepetitionDuration = desk.getLastRepeatDuration();
-        return currentRepetitionDuration + lastRepetitionDuration * DERATION_FACTOR <= lastRepetitionDuration;
+        return currentRepetitionDuration <= lastRepetitionDuration + lastRepetitionDuration * DERATION_FACTOR;
     }
 
     public int getUpdatedRepetitionDay(Deck desk) {

@@ -531,7 +531,7 @@ public class LessonActivity extends AppCompatActivity {
         textViewRepetitionQuantity.setText(String.format(Locale.getDefault(), "%d", updatedDesk.getRepetitionQuantity()));
         textViewSuccessMark.setText(lessonDesk.isSucceededLastRepetition() ? "succeed" : "failed");
 
-        if (!dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentDuration)) {
+        if (!dateWorker.isRepetitionSucceeded(lessonDesk, currentDuration)) {
             textViewCurrentDuration.setTextColor(ContextCompat.getColor(this, R.color.red));
         }
         dialog.show();
@@ -546,7 +546,7 @@ public class LessonActivity extends AppCompatActivity {
         if (lessonDesk.getRepetitionQuantity() % 2 != 0) {
             updatedLastRepetitionDate = dateWorker.getCurrentDate();
             currentRepetitionDuration = timer.getSavedTotalSeconds();
-            updatedSucceededLastRepetition = dateWorker.getUpdatedSucceededLastRepetition(lessonDesk, currentRepetitionDuration);
+            updatedSucceededLastRepetition = dateWorker.isRepetitionSucceeded(lessonDesk, currentRepetitionDuration);
         } else {
             updatedLastRepetitionDate = lessonDesk.getLastRepetitionDate();
             currentRepetitionDuration = lessonDesk.getLastRepeatDuration();
