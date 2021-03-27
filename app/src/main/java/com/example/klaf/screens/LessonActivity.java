@@ -493,7 +493,7 @@ public class LessonActivity extends AppCompatActivity {
                     int serviceId = (int) currentTime;
                     long scheduledInterval = updatedDeck.getScheduledDate() - currentTime;
                     PersistableBundle bundle = new PersistableBundle();
-                    bundle.putString("desk_name", lessonDesk.getName());
+                    bundle.putString(MainActivity.TAG_DECK_NAME, lessonDesk.getName());
                     JobInfo.Builder infoBuilder = new JobInfo.Builder(serviceId, componentName);
                     infoBuilder.setMinimumLatency(scheduledInterval)
                             .setOverrideDeadline(scheduledInterval)
@@ -524,7 +524,6 @@ public class LessonActivity extends AppCompatActivity {
 
         textViewLastDuration.setText(timer.getTimeAsString(lessonDesk.getLastRepeatDuration()));
         textViewCurrentDuration.setText(timer.getTimeAsString(currentDuration));
-
         textViewNewScheduledDate.setText(dateWorker.getFormattedDate(updatedDesk.getScheduledDate()));
         textViewLastScheduledDate.setText(dateWorker.getFormattedDate(lessonDesk.getScheduledDate()));
         textViewLastRepetitionDate.setText(dateWorker.getFormattedDate(updatedDesk.getLastRepetitionDate()));

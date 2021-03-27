@@ -44,6 +44,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG_DECK_ID = "deck_id";
+    public static final String TAG_DECK_NAME = "deck_name";
 
     private static boolean firstStart = true;
     private MainViewModel viewModel;
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     int serviceId = (int) currentTime;
                     long scheduledInterval = deck.getScheduledDate() - currentTime;
                     PersistableBundle bundle = new PersistableBundle();
-                    bundle.putString("deck_name", deck.getName());
+                    bundle.putString(TAG_DECK_NAME, deck.getName());
 
                     JobInfo.Builder infoBuilder = new JobInfo.Builder(serviceId, componentName);
                     infoBuilder.setMinimumLatency(scheduledInterval)
