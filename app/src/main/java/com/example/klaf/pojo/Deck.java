@@ -7,10 +7,11 @@ import androidx.room.PrimaryKey;
 
 import com.example.klaf.DateWorker;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(tableName = "deck")
-public class Deck {
+public class Deck implements Serializable {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;

@@ -17,6 +17,7 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
@@ -32,23 +33,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.klaf.DateWorker;
+import com.example.klaf.MyTimer;
 import com.example.klaf.R;
 import com.example.klaf.adapters.DeckAdapter;
+import com.example.klaf.pojo.Card;
 import com.example.klaf.pojo.Deck;
 import com.example.klaf.services.RepetitionDayUpdater;
 import com.example.klaf.services.RepetitionReminder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG_DECK_ID = "deck_id";
     public static final String TAG_DECK_NAME = "deck_name";
+    private static final String FILE_NAME_DECKS = "decks.obj";
+    private static final String FILE_NAME_CARDS = "cards.obj";
 
     private static boolean firstStart = true;
     private MainViewModel viewModel;
     private List<Deck> decks;
+    private List<Card> cards;
     private List<Integer> cardQuantityInDeck;
     private DeckAdapter adapter;
     private RecyclerView recyclerView;
@@ -62,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewDecks);
         deckCreationButton = findViewById(R.id.deckCreationButton);
         decks = new ArrayList<>();
+        cards = new ArrayList<>();
         cardQuantityInDeck = new ArrayList<>();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -82,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         adapter.setOnBottomReachedListener(() -> {
-                DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
-                float heightPixels = displaymetrics.heightPixels;
-                ObjectAnimator animator = ObjectAnimator.ofFloat(deckCreationButton, View.TRANSLATION_Y, -(heightPixels - heightPixels / 4));
-                animator.setDuration(500);
-                animator.start();
+            DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+            float heightPixels = displaymetrics.heightPixels;
+            ObjectAnimator animator = ObjectAnimator.ofFloat(deckCreationButton, View.TRANSLATION_Y, -(heightPixels - heightPixels / 4));
+            animator.setDuration(500);
+            animator.start();
         });
 
         adapter.setOnTopReachedListener(new DeckAdapter.OnTopReachedListener() {
@@ -114,6 +129,16 @@ public class MainActivity extends AppCompatActivity {
         if (firstStart) {
             sharedPreferences.edit().putBoolean("first_start", false).apply();
         }
+
+
+        for (Deck deck : decks) {
+            Log.i("file_tag", "name: " +
+                    deck.getName() +
+                    ", creationDate: " +
+                    deck.getCreationDate() + ", id:" +
+                    deck.getId() +
+                    ", date: " + deck.getLastRepetitionDate());
+        }
     }
 
     @Override
@@ -121,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         decks.clear();
         decks.addAll(viewModel.getDeckList());
+        cards.clear();
+        cards.addAll(viewModel.getAllCardsList());
         cardQuantityInDeck.clear();
         cardQuantityInDeck.addAll(viewModel.getCardQuantityList());
         adapter.notifyDataSetChanged();
@@ -129,6 +156,50 @@ public class MainActivity extends AppCompatActivity {
         runRepetitionReminder(firstStart);
         showInfoForChecking();
         NotificationManagerCompat.from(this).cancelAll();
+
+
+//        for (Card card : cards) {
+//            Log.i("file_tag", "onResume: " + card.getId() + "---" + card.getForeignWord());
+//        }
+//        saveObjectInInternalStorage(FILE_NAME_DECKS, decks);
+//        saveObjectInInternalStorage(FILE_NAME_CARDS, cards);
+
+//        List<Deck> decksTest = getObjectsListFromAssets(FILE_NAME_DECKS);
+//        for (Deck deck : decksTest) {
+//            Log.i("file_tag", "onResume: " + deck.getId());
+//        }
+
+//        List<Card> cardsTest = getObjectsListFromAssets(FILE_NAME_CARDS);
+//        for (Card card : cardsTest) {
+//            Log.i("file_tag", "onResume: " + card.getId() + "---" + card.getForeignWord());
+//        }
+
+//        viewModel.insertDeckList(decksTest);
+//        viewModel.insertCardList(cardsTest);
+
+    }
+
+    private<T extends Serializable> void saveObjectInInternalStorage(String fileName, List<T> objects) {
+        try {
+            FileOutputStream stream = openFileOutput(fileName, MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream);
+            objectOutputStream.writeObject(objects);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private<T extends Serializable> List<T> getObjectsListFromAssets(String fileName) {
+        List<T> result = new ArrayList<>();
+        AssetManager assetManager = getAssets();
+        try {
+            InputStream inputStream = assetManager.open(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+            result = (List<T>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private void runRepetitionDayUpdater(boolean firstStart) {

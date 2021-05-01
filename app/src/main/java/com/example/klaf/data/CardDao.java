@@ -18,8 +18,14 @@ public interface CardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insetCard(Card card);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insetCardList(List<Card> cards);
+
     @Query("SELECT * FROM card")
     LiveData<List<Card>> getAllCards();
+
+    @Query("SELECT * FROM card")
+    List<Card> getAllCardsList();
 
     @Query("SELECT * FROM card WHERE idDeck = :idDeckTable")
     List<Card> getCardsByDeck(int idDeckTable);

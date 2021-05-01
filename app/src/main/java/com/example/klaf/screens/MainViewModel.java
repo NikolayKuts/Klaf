@@ -147,6 +147,35 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public void insertCardList(List<Card> cards) {
+        new InsetCardListTask().execute(cards);
+    }
+
+    private static class InsetCardListTask extends AsyncTask<List<Card>, Void, Void> {
+        @Override
+        protected Void doInBackground(List<Card>... lists) {
+            database.cardDao().insetCardList(lists[0]);
+            return null;
+        }
+    }
+
+    public List<Card> getAllCardsList() {
+        List<Card> result = null;
+        try {
+            result = new GetAllCardsListTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static class GetAllCardsListTask extends AsyncTask<Void, Void, List<Card>> {
+        @Override
+        protected List<Card> doInBackground(Void... voids) {
+            return database.cardDao().getAllCardsList();
+        }
+    }
+
     public List<Card> getCardsByDeckId(int deckId) {
         List<Card> result = null;
         try {
