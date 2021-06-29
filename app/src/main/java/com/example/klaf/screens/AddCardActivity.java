@@ -67,7 +67,7 @@ public class AddCardActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 lettersBarAdapter.notifyDataSetChanged();
                 IpaProcesser ipaProcesser = new IpaProcesser();
-                editTextIpa.setText(ipaProcesser.getInCompletedCouples(checkedLetterHolders));
+                editTextIpa.setText(ipaProcesser.getUncompletedCouples(checkedLetterHolders));
             }
         });
 

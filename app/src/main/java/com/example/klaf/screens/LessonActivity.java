@@ -114,7 +114,7 @@ public class LessonActivity extends AppCompatActivity {
             public void onClick() {
                 if (buttonAnimator.isClicked()) {
                     if (timer.isRun()) {
-                        timer.pauseCount();
+                        timer.pauseCounting();
                     }
                 } else {
                     if (timer.isPaused()) {
@@ -179,7 +179,9 @@ public class LessonActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        timer.pauseCount();
+        if (timer.isRun()) {
+            timer.pauseCounting();
+        }
     }
 
     private void fillCardsByProgress() {

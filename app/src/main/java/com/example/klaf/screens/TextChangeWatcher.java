@@ -36,13 +36,13 @@ public class TextChangeWatcher implements TextWatcher {
         if (!foreignWord.isEmpty()) {
             String[] array = foreignWord.split("");
             LinkedList<String> arrayList = new LinkedList<>(Arrays.asList(array));
-            arrayList.remove(0);
+//            arrayList.remove(0);
             for (int i = 0; i < arrayList.size(); i++) {
                 holders.add(new CheckedLetterHolder(arrayList.get(i), false));
             }
         }
         adapter.notifyDataSetChanged();
-        editTextIpa.setText(ipaProcesser.getInCompletedCouples(holders));
+        editTextIpa.setText(ipaProcesser.getUncompletedCouples(holders));
     }
 
     @Override

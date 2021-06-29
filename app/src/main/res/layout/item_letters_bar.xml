@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textColor="@color/letter_item_dark"
         android:padding="3dp"
         android:textSize="30sp"
         android:layout_margin="3sp"

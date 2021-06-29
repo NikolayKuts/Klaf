@@ -7,7 +7,7 @@ import java.util.List;
 
 public class IpaProcesser {
 
-    public String getInCompletedCouples(List<CheckedLetterHolder> checkedLetterHolders) {
+    public String getUncompletedCouples(List<CheckedLetterHolder> checkedLetterHolders) {
         List<String> list = new ArrayList<>();
         StringBuilder result = new StringBuilder();
 

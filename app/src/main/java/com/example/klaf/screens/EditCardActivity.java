@@ -59,7 +59,7 @@ public class EditCardActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 adapter.notifyDataSetChanged();
-                editTextIpa.setText(ipaProcesser.getInCompletedCouples(checkedLetterHolders));
+                editTextIpa.setText(ipaProcesser.getUncompletedCouples(checkedLetterHolders));
             }
         });
 

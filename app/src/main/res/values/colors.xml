@@ -21,4 +21,5 @@
     <color name="item_deck_name_green">#9DC174</color>
     <color name="item_deck_name_grey">#B3B3B3</color>
     <color name="green_button">#839371</color>
+    <color name="letter_item_dark">#434343</color>
 </resources>

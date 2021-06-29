@@ -60,7 +60,7 @@ public class MyTimer {
         textView.setText("00:00");
     }
 
-    public void pauseCount() {
+    public void pauseCounting() {
         run = false;
         paused = true;
         setColorByRun();
